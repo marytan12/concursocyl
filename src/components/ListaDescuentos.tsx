@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 import TarjetaDescuento from './TarjetaDescuento';
 import GeonotisSearchBar from './GeonotisSearchBar';
+import { useFavorites } from '@/hooks/useFavorites';
 import { COLORES_CATEGORIA } from '@/lib/utils';
 import { CategoryIcon, IconSparkles } from '@/components/Icons';
 
@@ -28,6 +29,9 @@ interface Props {
 export default function ListaDescuentos({ descuentos, onSelect }: Props) {
   const [busqueda, setBusqueda] = useState('');
   const [categoriaActiva, setCategoriaActiva] = useState<string | null>(null);
+  const [showAllFilters, setShowAllFilters] = useState(false);
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
+  const { isFavorite } = useFavorites('descuentos');
 
   const filtrados = useMemo(() => {
     return descuentos.filter((d) => {
@@ -38,9 +42,10 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
         d.descripcion.toLowerCase().includes(term) ||
         d.localidad.toLowerCase().includes(term);
       const matchCategoria = !categoriaActiva || d.categoria === categoriaActiva;
-      return matchBusqueda && matchCategoria;
+      const matchFavorito = !onlyFavorites || isFavorite(d.id);
+      return matchBusqueda && matchCategoria && matchFavorito;
     });
-  }, [descuentos, busqueda, categoriaActiva]);
+  }, [descuentos, busqueda, categoriaActiva, onlyFavorites, isFavorite]);
 
   const categoriasDisponibles = useMemo(
     () =>
@@ -49,6 +54,7 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
       ),
     [descuentos]
   );
+  const categoriasVisibles = showAllFilters ? categoriasDisponibles : categoriasDisponibles.slice(0, 1);
 
   return (
     <div className="lista-descuentos">
@@ -69,7 +75,17 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
             <span>Todas</span>
             <strong>{descuentos.length}</strong>
           </button>
-          {categoriasDisponibles.map((categoria) => (
+          {showAllFilters ? (
+            <button
+              className={`chip favorite-chip ${onlyFavorites ? 'active' : ''}`}
+              onClick={() => setOnlyFavorites((value) => !value)}
+            >
+              <IconSparkles size={16} />
+              <span>Favoritos</span>
+              <strong>{descuentos.filter((descuento) => isFavorite(descuento.id)).length}</strong>
+            </button>
+          ) : null}
+          {categoriasVisibles.map((categoria) => (
             <button
               key={categoria}
               className={`chip ${categoriaActiva === categoria ? 'active' : ''}`}
@@ -92,6 +108,11 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
               <strong>{descuentos.filter((descuento) => descuento.categoria === categoria).length}</strong>
             </button>
           ))}
+          {categoriasDisponibles.length > 1 ? (
+            <button className="chip show-more" onClick={() => setShowAllFilters((value) => !value)}>
+              <span>{showAllFilters ? 'Mostrar menos filtros' : 'Mostrar mas filtros'}</span>
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -135,7 +156,7 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
 
         .category-scroller {
           display: grid;
-          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 12px;
           overflow-x: auto;
           padding: 2px;
@@ -197,6 +218,22 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
           border-color: var(--chip-color, var(--border-active));
           color: var(--text-primary);
           transform: translateY(-2px);
+        }
+
+        .chip.favorite-chip.active {
+          background: var(--brand-accent-strong);
+          color: #fff;
+          border-color: transparent;
+          box-shadow: 0 8px 20px color-mix(in srgb, var(--brand-accent) 30%, transparent);
+        }
+
+        .chip.show-more {
+          grid-column: 1 / -1;
+          justify-content: center;
+          min-height: 46px;
+          color: var(--brand-accent-strong);
+          background: color-mix(in srgb, var(--brand-accent) 10%, var(--surface-strong));
+          border-color: color-mix(in srgb, var(--brand-accent) 24%, transparent);
         }
 
         .discounts-grid {

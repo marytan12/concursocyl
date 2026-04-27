@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import type { CSSProperties } from 'react';
 import { IconHome, IconInfo, IconMap, IconTag } from '@/components/Icons';
+import ToggleTema from '@/components/ToggleTema';
 
 const TABS = [
   { href: '/', label: 'Inicio', icon: IconHome },
@@ -22,25 +23,29 @@ export default function NavegacionMovil() {
   return (
     <nav className="bottom-nav" role="navigation" aria-label="Navegacion principal">
       <div className="nav-dock" style={{ '--active-index': activeIndex } as CSSProperties & Record<string, number>}>
-        <span className="nav-indicator" aria-hidden="true" />
-        {TABS.map((tab, index) => {
-          const isActive = index === activeIndex;
-          const Icon = tab.icon;
+        <div className="dock-tabs">
+          <span className="nav-indicator" aria-hidden="true" />
+          {TABS.map((tab, index) => {
+            const isActive = index === activeIndex;
+            const Icon = tab.icon;
 
-          return (
-            <Link
-              key={tab.href}
-              href={tab.href}
-              className={`dock-item ${isActive ? 'active' : ''}`}
-              aria-current={isActive ? 'page' : undefined}
-              aria-label={tab.label}
-            >
-              <span className="dock-icon">
-                <Icon size={22} strokeWidth={isActive ? 2.25 : 1.7} />
-              </span>
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={tab.href}
+                href={tab.href}
+                className={`dock-item ${isActive ? 'active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
+                aria-label={tab.label}
+              >
+                <span className="dock-icon">
+                  <Icon size={22} strokeWidth={isActive ? 2.25 : 1.7} />
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+        <span className="dock-separator" aria-hidden="true" />
+        <ToggleTema />
       </div>
 
       <style jsx>{`
@@ -52,19 +57,20 @@ export default function NavegacionMovil() {
           z-index: 5000;
           display: flex;
           justify-content: center;
-          padding: 0 20px calc(18px + env(safe-area-inset-bottom, 0px));
+          padding: 0 calc(5vw) calc(18px + env(safe-area-inset-bottom, 0px));
           pointer-events: none;
         }
 
         .nav-dock {
-          --item-size: 54px;
-          --dock-gap: 18px;
+          --item-size: 58px;
           position: relative;
           display: flex;
           align-items: center;
-          gap: var(--dock-gap);
+          gap: 10px;
+          width: min(90vw, 460px);
+          justify-content: space-between;
           padding: 10px 14px;
-          border-radius: 34px;
+          border-radius: 42px;
           pointer-events: auto;
           background: color-mix(in srgb, var(--bg-secondary) 56%, rgba(35, 48, 56, 0.42));
           backdrop-filter: blur(18px) saturate(180%);
@@ -76,23 +82,36 @@ export default function NavegacionMovil() {
             inset 0 1px 0 rgba(255, 255, 255, 0.18);
         }
 
+        .dock-tabs {
+          position: relative;
+          display: grid;
+          grid-template-columns: repeat(4, var(--item-size));
+          flex: 1;
+          justify-content: space-between;
+          align-items: center;
+          height: var(--item-size);
+        }
+
         .nav-indicator {
           position: absolute;
-          top: 10px;
-          left: 14px;
+          top: 50%;
+          left: calc(
+            var(--active-index) * ((100% - var(--item-size)) / 3)
+          );
           width: var(--item-size);
           height: var(--item-size);
-          border-radius: 50% 48% 55% 45% / 45% 55% 46% 54%;
+          border-radius: 54% 46% 51% 49% / 48% 55% 45% 52%;
           background:
-            radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.72), transparent 22%),
-            linear-gradient(135deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1));
-          border: 1px solid rgba(255, 255, 255, 0.34);
+            linear-gradient(145deg, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.07)),
+            color-mix(in srgb, var(--brand-accent) 14%, transparent);
+          border: 1px solid rgba(255, 255, 255, 0.18);
           box-shadow:
-            0 12px 28px rgba(201, 95, 60, 0.22),
-            inset 0 0 18px rgba(255, 255, 255, 0.22);
-          backdrop-filter: blur(10px) saturate(170%);
-          -webkit-backdrop-filter: blur(10px) saturate(170%);
-          transform: translateX(calc(var(--active-index) * (var(--item-size) + var(--dock-gap))));
+            0 10px 24px color-mix(in srgb, var(--brand-accent) 12%, transparent),
+            inset 0 1px 6px rgba(255, 255, 255, 0.12),
+            inset 0 -10px 18px rgba(0, 0, 0, 0.04);
+          backdrop-filter: blur(14px) saturate(140%);
+          -webkit-backdrop-filter: blur(14px) saturate(140%);
+          transform: translateY(-50%);
           transition: transform 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.18), border-radius 0.42s ease;
         }
 
@@ -130,11 +149,32 @@ export default function NavegacionMovil() {
           justify-content: center;
         }
 
+        .dock-separator {
+          width: 1px;
+          height: 34px;
+          background: color-mix(in srgb, var(--text-primary) 18%, transparent);
+        }
+
+        .nav-dock :global(.toggle-tema) {
+          min-width: 62px;
+          width: 62px;
+          height: 62px;
+          padding: 0;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--surface-strong) 58%, transparent);
+        }
+
         @media (max-width: 480px) {
           .nav-dock {
-            --item-size: 48px;
-            --dock-gap: 14px;
+            --item-size: 52px;
+            width: min(90vw, 460px);
             padding: 9px 12px;
+          }
+
+          .nav-dock :global(.toggle-tema) {
+            min-width: 54px;
+            width: 54px;
+            height: 54px;
           }
         }
       `}</style>

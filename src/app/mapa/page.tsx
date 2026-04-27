@@ -5,7 +5,8 @@ import dynamic from 'next/dynamic';
 import TarjetaEvento from '@/components/TarjetaEvento';
 import FiltrosDrawer from '@/components/FiltrosDrawer';
 import GeonotisSearchBar from '@/components/GeonotisSearchBar';
-import { CategoryIcon, IconFilter } from '@/components/Icons';
+import { useFavorites } from '@/hooks/useFavorites';
+import { CategoryIcon } from '@/components/Icons';
 import type { MarkerData } from '@/types';
 
 const MapaInteractivo = dynamic(() => import('@/components/MapaInteractivo'), {
@@ -39,7 +40,11 @@ export default function MapaPage() {
   const [filtrosOpen, setFiltrosOpen] = useState(false);
   const [filtros, setFiltros] = useState<Record<string, string | undefined>>({});
   const [mapSearch, setMapSearch] = useState('');
+  const [nearMe, setNearMe] = useState(false);
+  const [onlyFavorites, setOnlyFavorites] = useState(false);
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [loading, setLoading] = useState(true);
+  const { isFavorite } = useFavorites('eventos');
 
   const fetchEventos = useCallback(async () => {
     setLoading(true);
@@ -69,7 +74,27 @@ export default function MapaPage() {
     return () => window.clearTimeout(timer);
   }, [fetchEventos]);
 
-  const markers: MarkerData[] = eventos.map((e) => ({
+  const distanceKm = useCallback((evento: Evento) => {
+    if (!userLocation) return Number.POSITIVE_INFINITY;
+    const toRad = (value: number) => (value * Math.PI) / 180;
+    const radius = 6371;
+    const dLat = toRad(evento.latitud - userLocation.lat);
+    const dLng = toRad(evento.longitud - userLocation.lng);
+    const a =
+      Math.sin(dLat / 2) ** 2 +
+      Math.cos(toRad(userLocation.lat)) *
+        Math.cos(toRad(evento.latitud)) *
+        Math.sin(dLng / 2) ** 2;
+    return 2 * radius * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  }, [userLocation]);
+
+  const eventosVisibles = eventos.filter((evento) => {
+    if (onlyFavorites && !isFavorite(evento.id)) return false;
+    if (nearMe && distanceKm(evento) > 35) return false;
+    return true;
+  });
+
+  const markers: MarkerData[] = eventosVisibles.map((e) => ({
     id: e.id,
     lat: e.latitud,
     lng: e.longitud,
@@ -82,14 +107,46 @@ export default function MapaPage() {
 
   const handleMarkerClick = useCallback(
     (marker: MarkerData) => {
-      const evento = eventos.find((e) => e.id === marker.id);
+      const evento = eventosVisibles.find((e) => e.id === marker.id);
       if (evento) setSelectedEvento(evento);
     },
-    [eventos]
+    [eventosVisibles]
   );
 
-  const activeFilterCount = Object.values(filtros).filter(Boolean).length;
   const categoriasVisibles = Array.from(new Set(eventos.map((evento) => evento.categoria))).slice(0, 5);
+  const applyToday = useCallback(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    setFiltros((actuales) => ({ ...actuales, desde: today, hasta: today }));
+  }, []);
+
+  const applyWeekend = useCallback(() => {
+    const now = new Date();
+    const day = now.getDay();
+    const saturday = new Date(now);
+    saturday.setDate(now.getDate() + ((6 - day + 7) % 7));
+    const sunday = new Date(saturday);
+    sunday.setDate(saturday.getDate() + 1);
+    setFiltros((actuales) => ({
+      ...actuales,
+      desde: saturday.toISOString().slice(0, 10),
+      hasta: sunday.toISOString().slice(0, 10),
+    }));
+  }, []);
+
+  const toggleNearMe = useCallback(() => {
+    if (nearMe) {
+      setNearMe(false);
+      return;
+    }
+
+    navigator.geolocation?.getCurrentPosition((position) => {
+      setUserLocation({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude,
+      });
+      setNearMe(true);
+    });
+  }, [nearMe]);
   const handleMapSearch = useCallback((value: string) => {
     setFiltros((actuales) => ({
       ...actuales,
@@ -111,32 +168,24 @@ export default function MapaPage() {
 
   return (
     <div className="mapa-page">
-      <div className="floating-bar">
-        <div className="bar-left">
-          <div className="bar-title-group">
-            <h1>Explorar</h1>
-            <span className="event-counter">
-              <span className="counter-dot" />
-              {loading ? '...' : eventos.length}
-            </span>
-          </div>
-        </div>
-        <button
-          className="filter-btn-glass"
-          onClick={() => setFiltrosOpen(true)}
-        >
-          <IconFilter size={16} />
-          <span>Filtros</span>
-          {activeFilterCount > 0 && <span className="filter-count">{activeFilterCount}</span>}
-        </button>
-      </div>
-
       <div className="map-viewport">
         <div className="map-inner">
           <MapaInteractivo markers={markers} onMarkerClick={handleMarkerClick} />
         </div>
 
         <div className="floating-chips">
+          <button className="chip-glass quick" onClick={applyToday}>
+            <span>Hoy</span>
+          </button>
+          <button className="chip-glass quick" onClick={applyWeekend}>
+            <span>Este finde</span>
+          </button>
+          <button className={`chip-glass quick ${nearMe ? 'active' : ''}`} onClick={toggleNearMe}>
+            <span>Cerca de mi</span>
+          </button>
+          <button className={`chip-glass quick ${onlyFavorites ? 'active' : ''}`} onClick={() => setOnlyFavorites((value) => !value)}>
+            <span>Favoritos</span>
+          </button>
           {categoriasVisibles.map((cat) => (
             <button
               key={cat}
@@ -152,6 +201,9 @@ export default function MapaPage() {
               <span>{cat}</span>
             </button>
           ))}
+          <button className="chip-glass more" onClick={() => setFiltrosOpen(true)}>
+            <span>Mas filtros</span>
+          </button>
         </div>
 
         <GeonotisSearchBar
@@ -191,112 +243,8 @@ export default function MapaPage() {
           display: flex;
           flex-direction: column;
           height: 100dvh;
-          margin-top: -80px;
           position: relative;
           overflow: hidden;
-        }
-
-        .floating-bar {
-          position: absolute;
-          top: 18px;
-          left: 16px;
-          right: 16px;
-          z-index: 1000;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          padding: 10px 10px 10px 20px;
-          border-radius: 20px;
-          background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
-          backdrop-filter: blur(24px) saturate(180%);
-          -webkit-backdrop-filter: blur(24px) saturate(180%);
-          border: 1px solid color-mix(in srgb, var(--border-subtle) 60%, transparent);
-          box-shadow:
-            0 8px 32px rgba(0, 0, 0, 0.06),
-            0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-          pointer-events: auto;
-        }
-
-        .bar-left {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        }
-
-        .bar-title-group {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-
-        h1 {
-          font-size: 1.15rem;
-          font-weight: 800;
-          letter-spacing: -0.02em;
-          color: var(--text-primary);
-        }
-
-        .event-counter {
-          display: flex;
-          align-items: center;
-          gap: 6px;
-          padding: 4px 10px;
-          border-radius: 99px;
-          font-size: 12px;
-          font-weight: 700;
-          color: var(--text-muted);
-          background: color-mix(in srgb, var(--surface-soft) 60%, transparent);
-          border: 1px solid var(--border-subtle);
-        }
-
-        .counter-dot {
-          width: 6px;
-          height: 6px;
-          border-radius: 50%;
-          background: var(--accent-emerald);
-          animation: pulse-dot 2s ease-in-out infinite;
-        }
-
-        @keyframes pulse-dot {
-          0%, 100% { opacity: 1; }
-          50% { opacity: 0.4; }
-        }
-
-        .filter-btn-glass {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          padding: 10px 18px;
-          border-radius: 14px;
-          border: 1px solid var(--border-subtle);
-          background: color-mix(in srgb, var(--surface-soft) 60%, transparent);
-          color: var(--text-primary);
-          font-weight: 700;
-          font-size: 13px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-
-        .filter-btn-glass:hover {
-          background: color-mix(in srgb, var(--surface-strong) 80%, transparent);
-          border-color: var(--border-active);
-        }
-
-        .filter-btn-glass:active {
-          transform: scale(0.96);
-        }
-
-        .filter-count {
-          background: var(--brand-accent);
-          color: white;
-          min-width: 18px;
-          height: 18px;
-          font-size: 10px;
-          font-weight: 800;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
         }
 
         .map-viewport {
@@ -312,9 +260,10 @@ export default function MapaPage() {
 
         .floating-chips {
           position: absolute;
-          top: 76px;
-          left: 16px;
-          right: 16px;
+          bottom: 176px;
+          left: 50%;
+          width: min(90vw, 460px);
+          transform: translateX(-50%);
           z-index: 960;
           display: flex;
           gap: 8px;
@@ -350,6 +299,16 @@ export default function MapaPage() {
           transition: all 0.2s ease;
         }
 
+        .chip-glass.more {
+          color: var(--brand-accent-strong);
+          cursor: pointer;
+        }
+
+        .chip-glass.quick {
+          cursor: pointer;
+          background: color-mix(in srgb, var(--surface-strong) 86%, transparent);
+        }
+
         .chip-glass.active {
           background: var(--brand-accent-strong);
           border-color: transparent;
@@ -380,25 +339,11 @@ export default function MapaPage() {
         @media (max-width: 768px) {
           .mapa-page {
             height: 100dvh;
-            margin-top: -74px;
-          }
-
-          .floating-bar {
-            top: 10px;
-            left: 10px;
-            right: 10px;
-            padding: 8px 8px 8px 16px;
-            border-radius: 16px;
-          }
-
-          h1 {
-            font-size: 1rem;
           }
 
           .floating-chips {
-            top: 68px;
-            left: 10px;
-            right: 10px;
+            bottom: 176px;
+            width: min(90vw, 460px);
           }
         }
       `}</style>

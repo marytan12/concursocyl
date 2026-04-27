@@ -2,7 +2,9 @@
 
 import Image from 'next/image';
 import { formatearFecha, COLORES_CATEGORIA, CATEGORIAS_EVENTO } from '@/lib/utils';
-import { CategoryIcon, IconCalendar, IconExternalLink, IconPin, IconX } from '@/components/Icons';
+import { getDirectionsUrl, shareContent } from '@/lib/clientActions';
+import { useFavorites } from '@/hooks/useFavorites';
+import { CategoryIcon, IconCalendar, IconExternalLink, IconHeart, IconPin, IconRoute, IconShare, IconX } from '@/components/Icons';
 import type { CategoriaEvento } from '@/types';
 
 interface Props {
@@ -13,6 +15,8 @@ interface Props {
     categoria: string;
     fechaInicio: string;
     fechaFin?: string | null;
+    latitud?: number;
+    longitud?: number;
     localidad: string;
     provincia: string;
     imagen?: string | null;
@@ -24,6 +28,20 @@ interface Props {
 export default function TarjetaEvento({ evento, onClose }: Props) {
   const color = COLORES_CATEGORIA[evento.categoria] || '#6B7280';
   const catLabel = CATEGORIAS_EVENTO[evento.categoria as CategoriaEvento] || evento.categoria;
+  const { isFavorite, toggleFavorite } = useFavorites('eventos');
+  const directionsUrl = getDirectionsUrl({
+    lat: evento.latitud,
+    lng: evento.longitud,
+    query: `${evento.titulo}, ${evento.localidad}, ${evento.provincia}`,
+  });
+
+  const handleShare = async () => {
+    await shareContent({
+      title: evento.titulo,
+      text: `${catLabel} en ${evento.localidad}, ${evento.provincia}`,
+      url: evento.enlace,
+    });
+  };
 
   return (
     <div className="event-panel">
@@ -53,6 +71,24 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
             )}
           </div>
           <h3>{evento.titulo}</h3>
+        </div>
+
+        <div className="quick-actions">
+          <button
+            className={`round-action ${isFavorite(evento.id) ? 'active' : ''}`}
+            onClick={() => toggleFavorite(evento.id)}
+            aria-label="Guardar favorito"
+          >
+            <IconHeart size={16} fill={isFavorite(evento.id) ? 'currentColor' : 'none'} />
+          </button>
+          <button className="round-action" onClick={handleShare} aria-label="Compartir">
+            <IconShare size={16} />
+          </button>
+          {directionsUrl ? (
+            <a className="round-action" href={directionsUrl} target="_blank" rel="noopener noreferrer" aria-label="Como llegar">
+              <IconRoute size={16} />
+            </a>
+          ) : null}
         </div>
 
         {/* ─── Image ─── */}
@@ -162,6 +198,37 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
 
         .panel-header {
           padding: 24px 24px 16px;
+        }
+
+        .quick-actions {
+          display: flex;
+          gap: 10px;
+          padding: 0 24px 18px;
+        }
+
+        .round-action {
+          width: 40px;
+          height: 40px;
+          border-radius: 999px;
+          border: 1px solid var(--border-subtle);
+          background: color-mix(in srgb, var(--surface-soft) 70%, transparent);
+          color: var(--text-secondary);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          text-decoration: none;
+          transition: transform 0.15s ease, color 0.15s ease, background 0.15s ease;
+        }
+
+        .round-action:hover,
+        .round-action.active {
+          background: color-mix(in srgb, var(--brand-accent) 14%, var(--surface-strong));
+          color: var(--brand-accent-strong);
+        }
+
+        .round-action:active {
+          transform: scale(0.94);
         }
 
         .header-row {

@@ -149,9 +149,9 @@ export default function MapaInteractivo({
         scrollWheelZoom
         style={{ width: '100%', height: '100%' }}
         zoomControl={false}
+        attributionControl={false}
       >
         <TileLayer
-          attribution='&copy; <a href="https://carto.com/">CartoDB</a>'
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
         />
 

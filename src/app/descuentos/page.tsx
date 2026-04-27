@@ -42,9 +42,6 @@ export default function DescuentosPage() {
     <div className="descuentos-page">
       <header className="page-header">
         <div className="header-content">
-          <div className="brand-badge">
-            <span className="eyebrow">Exclusivo Carnet Joven</span>
-          </div>
           <h1>
             Descuentos que te <span className="text-gradient">mueven</span>
             <small>{loading ? '(... Ofertas Activas)' : `(${descuentos.length} Ofertas Activas)`}</small>
@@ -91,23 +88,6 @@ export default function DescuentosPage() {
 
         .header-content {
           flex: 1;
-        }
-
-        .brand-badge {
-          display: inline-block;
-          margin-bottom: 12px;
-        }
-
-        .eyebrow {
-          font-size: 11px;
-          font-weight: 800;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          color: var(--brand-accent-strong);
-          background: color-mix(in srgb, var(--brand-accent) 12%, transparent);
-          padding: 6px 14px;
-          border-radius: 99px;
-          border: 1px solid color-mix(in srgb, var(--brand-accent) 20%, transparent);
         }
 
         .page-header h1 {

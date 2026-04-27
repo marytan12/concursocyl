@@ -1,14 +1,21 @@
+'use client';
+
 import {
   COLORES_CATEGORIA,
   CATEGORIAS_DESCUENTO,
   formatLocation,
   getDomainLabel,
 } from '@/lib/utils';
+import { getDirectionsUrl, shareContent } from '@/lib/clientActions';
+import { useFavorites } from '@/hooks/useFavorites';
 import {
   CategoryIcon,
   IconExternalLink,
   IconGlobe,
+  IconHeart,
   IconPin,
+  IconRoute,
+  IconShare,
   IconSparkles,
   IconX,
 } from '@/components/Icons';
@@ -21,6 +28,8 @@ interface Props {
     descripcion: string;
     categoria: string;
     direccion: string;
+    latitud?: number;
+    longitud?: number;
     localidad: string;
     provincia: string;
     porcentaje?: number | null;
@@ -42,6 +51,20 @@ export default function TarjetaDescuento({
   const location = formatLocation(descuento.localidad, descuento.provincia);
   const address = descuento.direccion?.trim() || null;
   const domain = getDomainLabel(descuento.enlace);
+  const { isFavorite, toggleFavorite } = useFavorites('descuentos');
+  const directionsUrl = getDirectionsUrl({
+    lat: descuento.latitud,
+    lng: descuento.longitud,
+    query: address ? `${address}, ${location ?? ''}` : location,
+  });
+
+  const handleShare = async () => {
+    await shareContent({
+      title: descuento.nombre,
+      text: location ? `Oferta en ${location}` : 'Oferta del Carnet Joven',
+      url: descuento.enlace,
+    });
+  };
 
   if (variant === 'detail') {
     return (
@@ -104,13 +127,28 @@ export default function TarjetaDescuento({
 
           <p className="descripcion">{descuento.descripcion}</p>
 
-          {descuento.enlace ? (
-            <a
-              href={descuento.enlace}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-pill btn-primary action-link"
+          <div className="detail-actions">
+            <button
+              className={`action-chip ${isFavorite(descuento.id) ? 'active' : ''}`}
+              onClick={() => toggleFavorite(descuento.id)}
             >
+              <IconHeart size={14} fill={isFavorite(descuento.id) ? 'currentColor' : 'none'} />
+              Guardar
+            </button>
+            <button className="action-chip" onClick={handleShare}>
+              <IconShare size={14} />
+              Compartir
+            </button>
+            {directionsUrl ? (
+              <a className="action-chip" href={directionsUrl} target="_blank" rel="noopener noreferrer">
+                <IconRoute size={14} />
+                Llegar
+              </a>
+            ) : null}
+          </div>
+
+          {descuento.enlace ? (
+            <a href={descuento.enlace} target="_blank" rel="noopener noreferrer" className="btn-pill btn-primary action-link">
               <IconExternalLink size={14} />
               Ver oferta
             </a>
@@ -216,6 +254,36 @@ export default function TarjetaDescuento({
             align-items: center;
             gap: 8px;
           }
+
+          .detail-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 14px;
+          }
+
+          .action-chip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 7px;
+            min-height: 38px;
+            padding: 0 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border-subtle);
+            background: var(--surface-soft);
+            color: var(--text-secondary);
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+          }
+
+          .action-chip.active,
+          .action-chip:hover {
+            color: var(--brand-accent-strong);
+            border-color: var(--border-active);
+          }
         `}</style>
       </div>
     );
@@ -260,6 +328,28 @@ export default function TarjetaDescuento({
             <span>{domain}</span>
           </div>
         )}
+        <div className="card-actions">
+          <button
+            className={`mini-action ${isFavorite(descuento.id) ? 'active' : ''}`}
+            onClick={(event) => {
+              event.stopPropagation();
+              toggleFavorite(descuento.id);
+            }}
+            aria-label="Guardar favorito"
+          >
+            <IconHeart size={13} fill={isFavorite(descuento.id) ? 'currentColor' : 'none'} />
+          </button>
+          <button
+            className="mini-action"
+            onClick={(event) => {
+              event.stopPropagation();
+              void handleShare();
+            }}
+            aria-label="Compartir"
+          >
+            <IconShare size={13} />
+          </button>
+        </div>
       </div>
 
       <style jsx>{`
@@ -356,6 +446,7 @@ export default function TarjetaDescuento({
         .card-footer {
           display: flex;
           align-items: center;
+          justify-content: space-between;
           gap: 14px;
           padding-top: 16px;
           border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -368,6 +459,31 @@ export default function TarjetaDescuento({
           font-size: 13px;
           font-weight: 600;
           color: var(--text-muted);
+        }
+
+        .card-actions {
+          display: flex;
+          gap: 6px;
+          flex-shrink: 0;
+        }
+
+        .mini-action {
+          width: 32px;
+          height: 32px;
+          border-radius: 999px;
+          border: 1px solid var(--border-subtle);
+          background: color-mix(in srgb, var(--surface-soft) 70%, transparent);
+          color: var(--text-muted);
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+        }
+
+        .mini-action.active,
+        .mini-action:hover {
+          color: var(--brand-accent-strong);
+          border-color: var(--border-active);
         }
       `}</style>
     </div>

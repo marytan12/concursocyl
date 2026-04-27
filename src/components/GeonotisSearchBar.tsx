@@ -73,8 +73,8 @@ export default function GeonotisSearchBar({
         .geonotis-search.floating {
           position: absolute;
           left: 50%;
-          top: 124px;
-          bottom: auto;
+          bottom: 112px;
+          top: auto;
           transform: translateX(-50%);
           z-index: 950;
           width: min(90%, 460px);
@@ -214,7 +214,7 @@ export default function GeonotisSearchBar({
 
         @media (max-width: 768px) {
           .geonotis-search.floating {
-            top: 146px;
+            bottom: 112px;
           }
 
           input {
