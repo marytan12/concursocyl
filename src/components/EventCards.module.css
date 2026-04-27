@@ -1,0 +1,140 @@
+.agendaGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.eventCard {
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border-subtle);
+}
+
+.eventImage {
+  width: 100%;
+  height: auto;
+  max-height: 200px;
+  object-fit: cover;
+  display: block;
+}
+
+.eventHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 10px;
+}
+
+.infoButton {
+  background: var(--surface-soft);
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--brand-medium);
+  transition: all 0.15s ease;
+}
+
+.infoButton:hover {
+  background: var(--surface-strong);
+  color: var(--brand-strong);
+}
+
+.eventBody {
+  padding: 14px;
+}
+
+.miniTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: var(--surface-tag);
+  color: var(--brand-accent);
+  margin-bottom: 10px;
+}
+
+.eventBody h4 {
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--brand-strong);
+  margin-bottom: 6px;
+}
+
+.eventBody p {
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.eventBody small {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--brand-medium);
+  font-weight: 700;
+}
+
+.popupOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.popupContent {
+  max-width: 420px;
+  width: 100%;
+}
+
+@media (max-width: 720px) {
+  .agendaGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .eventCard {
+    display: grid;
+    grid-template-columns: 112px 1fr;
+    align-items: stretch;
+    min-height: 128px;
+  }
+
+  .eventImage {
+    height: auto;
+    /* max-height: 128px; */
+  }
+
+  .eventBody {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 12px;
+  }
+
+  .eventBody h4 {
+    font-size: 0.96rem;
+  }
+
+  .eventBody p {
+    font-size: 0.9rem;
+  }
+
+  .miniTag {
+    margin-bottom: 8px;
+  }
+}

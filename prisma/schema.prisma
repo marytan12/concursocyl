@@ -1,0 +1,63 @@
+// =============================================================================
+// Prisma Schema — CyL Application
+// =============================================================================
+// Uses SQLite for local development. Switch datasource to postgresql for
+// Vercel Postgres in production (see env vars below).
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// Evento cultural: concierto, exposición, festival, etc.
+model Evento {
+  id          String   @id @default(cuid())
+  titulo      String
+  descripcion String
+  categoria   String   // CategoriaEvento enum value
+  fechaInicio DateTime
+  fechaFin    DateTime?
+  latitud     Float
+  longitud    Float
+  localidad   String
+  provincia   String   // Provincia enum value
+  imagen      String?
+  enlace      String?
+  fuente      String   // Source identifier for upsert logic
+  fuenteId    String?  // Original ID from the data source
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([fuente, fuenteId])
+  @@index([categoria])
+  @@index([provincia])
+  @@index([fechaInicio])
+}
+
+/// Descuento del Carné Joven para establecimientos y servicios
+model Descuento {
+  id          String   @id @default(cuid())
+  nombre      String
+  descripcion String
+  categoria   String   // CategoriaDescuento enum value
+  direccion   String
+  latitud     Float
+  longitud    Float
+  localidad   String
+  provincia   String   // Provincia enum value
+  porcentaje  Float?   // e.g., 10.0 = 10%
+  enlace      String?
+  fuente      String
+  fuenteId    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([fuente, fuenteId])
+  @@index([categoria])
+  @@index([provincia])
+  @@index([localidad])
+}

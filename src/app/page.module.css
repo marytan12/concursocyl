@@ -1,0 +1,449 @@
+.planazoPage {
+  max-width: 1220px;
+  margin: 0 auto;
+  padding: 24px 18px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.heroPanel {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 20px;
+  padding: 24px;
+  border-radius: 36px;
+  background: var(--surface-hero);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-card);
+}
+
+.heroCopy {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.eyebrow,
+.sectionKicker {
+  display: inline-flex;
+  width: fit-content;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background: var(--surface-chip);
+  border: 1px solid var(--border-subtle);
+  color: var(--brand-medium);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.planazoPage h1 {
+  font-family: var(--font-display), "Inter", sans-serif;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  line-height: 0.94;
+  letter-spacing: -0.06em;
+  color: var(--brand-strong);
+}
+
+.planazoPage h1 span {
+  display: block;
+  color: var(--brand-medium);
+  font-size: clamp(1.2rem, 3vw, 2rem);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-top: 12px;
+  max-width: 18ch;
+}
+
+.heroText,
+.routeCard p {
+  max-width: 58ch;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  color: var(--brand-soft);
+}
+
+.heroActions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.heroSide {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.heroStats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.statCard,
+.sectionCard {
+  background: var(--surface-soft);
+  border: 1px solid var(--border-subtle);
+  border-radius: 28px;
+}
+
+.statCard {
+  padding: 16px;
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.statCard strong {
+  font-family: var(--font-display), "Inter", sans-serif;
+  font-size: 2rem;
+  color: var(--brand-strong);
+}
+
+.statCard span {
+  color: var(--brand-muted);
+  font-size: 0.92rem;
+  line-height: 1.35;
+}
+
+.spotlightCard {
+  position: relative;
+  min-height: 340px;
+  overflow: hidden;
+  border-radius: 30px;
+}
+
+.spotlightImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.spotlightOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(34, 21, 13, 0.06), rgba(34, 21, 13, 0.7));
+}
+
+.spotlightContent {
+  position: absolute;
+  inset: auto 0 0 0;
+  padding: 22px;
+  color: #fff8f0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.spotlightTag,
+.miniTag,
+.cloudChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: fit-content;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.spotlightTag {
+  background: rgba(255, 248, 240, 0.18);
+  border: 1px solid rgba(255, 248, 240, 0.28);
+  color: #fff8f0;
+}
+
+.spotlightContent h2 {
+  font-family: var(--font-display), "Inter", sans-serif;
+  font-size: clamp(1.45rem, 3vw, 2rem);
+  line-height: 1.05;
+}
+
+.spotlightContent p {
+  color: rgba(255, 248, 240, 0.84);
+}
+
+.contentGrid {
+  display: grid;
+  grid-template-columns: 1.8fr 1fr;
+  gap: 24px;
+}
+
+.mainColumn,
+.sideColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sectionCard {
+  padding: 22px;
+  box-shadow: var(--shadow-soft);
+}
+
+.warmCard {
+  background: var(--surface-warm);
+}
+
+.compactCard {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.sectionHead {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.sectionHead h3,
+.compactCard h3 {
+  font-family: var(--font-display), "Inter", sans-serif;
+  font-size: 1.6rem;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--brand-strong);
+  margin-top: 10px;
+}
+
+.sectionLink {
+  color: var(--brand-medium);
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+
+.discountGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.discountCard {
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--surface-strong);
+  border: 1px solid var(--border-subtle);
+}
+
+
+
+.discountCard {
+  padding: 14px;
+}
+
+.miniTag {
+  background: var(--surface-tag);
+  color: var(--brand-accent);
+  margin-bottom: 10px;
+}
+
+.discountCard h4 {
+  font-size: 1rem;
+  line-height: 1.3;
+  color: var(--brand-strong);
+  margin-bottom: 6px;
+}
+
+.discountCard p,
+.reasonList li {
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.discountGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.discountCard {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.discountTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.discountTop strong {
+  color: var(--brand-accent-strong);
+  font-family: var(--font-display), "Inter", sans-serif;
+  font-size: 1.35rem;
+}
+
+.reasonList {
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chipCloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cloudChip {
+  background: var(--surface-cloud);
+  color: var(--brand-accent);
+}
+
+.alt {
+  background: var(--surface-cloud-alt);
+  color: var(--brand-chip-alt);
+}
+
+@media (max-width: 980px) {
+  .heroPanel,
+  .contentGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .spotlightCard {
+    min-height: 280px;
+  }
+}
+
+@media (max-width: 720px) {
+  .planazoPage {
+    padding: 16px 14px 44px;
+    gap: 18px;
+  }
+
+  .heroPanel,
+  .sectionCard {
+    padding: 16px;
+    border-radius: 24px;
+  }
+
+  .heroPanel {
+    gap: 16px;
+  }
+
+  .planazoPage h1 {
+    font-size: clamp(2.1rem, 11vw, 3.1rem);
+    line-height: 0.98;
+  }
+
+  .planazoPage h1 span {
+    font-size: 1rem;
+    margin-top: 10px;
+    max-width: 22ch;
+  }
+
+  .heroText,
+  .routeCard p {
+    font-size: 0.95rem;
+    line-height: 1.6;
+  }
+
+  .heroActions {
+    flex-direction: column;
+  }
+
+  .heroActions :global(.btn-pill) {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .heroStats {
+    grid-template-columns: repeat(3, minmax(92px, 1fr));
+    gap: 8px;
+  }
+
+  .statCard {
+    min-height: 92px;
+    padding: 14px;
+    border-radius: 20px;
+  }
+
+  .statCard strong {
+    font-size: 1.45rem;
+  }
+
+  .statCard span {
+    font-size: 0.78rem;
+  }
+
+  .heroStats,
+  .discountGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .discountCard h4 {
+    font-size: 0.96rem;
+  }
+
+  .discountCard p,
+  .reasonList li {
+    font-size: 0.9rem;
+  }
+
+  .miniTag {
+    margin-bottom: 8px;
+  }
+
+  .sectionHead {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .sectionHead h3,
+  .compactCard h3 {
+    font-size: 1.3rem;
+  }
+
+  .sectionLink {
+    font-size: 0.92rem;
+  }
+
+  .spotlightCard {
+    min-height: 220px;
+    border-radius: 24px;
+  }
+
+  .spotlightContent {
+    padding: 16px;
+    gap: 6px;
+  }
+
+  .spotlightContent h2 {
+    font-size: 1.4rem;
+  }
+
+  .spotlightContent p {
+    font-size: 0.9rem;
+  }
+
+  .compactCard {
+    gap: 12px;
+  }
+
+  .chipCloud {
+    gap: 8px;
+  }
+
+  .cloudChip {
+    font-size: 0.76rem;
+    padding: 6px 9px;
+  }
+}
+
+
