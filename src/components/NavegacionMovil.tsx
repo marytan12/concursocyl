@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import type { CSSProperties } from 'react';
 import { IconHome, IconInfo, IconMap, IconTag } from '@/components/Icons';
 
 const TABS = [
@@ -13,14 +14,15 @@ const TABS = [
 
 export default function NavegacionMovil() {
   const pathname = usePathname();
-
-  const activeIndex = TABS.findIndex((tab) =>
-    tab.href === '/' ? pathname === '/' : pathname.startsWith(tab.href)
+  const activeIndex = Math.max(
+    0,
+    TABS.findIndex((tab) => (tab.href === '/' ? pathname === '/' : pathname.startsWith(tab.href)))
   );
 
   return (
     <nav className="bottom-nav" role="navigation" aria-label="Navegacion principal">
-      <div className="nav-dock">
+      <div className="nav-dock" style={{ '--active-index': activeIndex } as CSSProperties & Record<string, number>}>
+        <span className="nav-indicator" aria-hidden="true" />
         {TABS.map((tab, index) => {
           const isActive = index === activeIndex;
           const Icon = tab.icon;
@@ -33,14 +35,12 @@ export default function NavegacionMovil() {
               aria-current={isActive ? 'page' : undefined}
               aria-label={tab.label}
             >
-
               <span className="dock-icon">
-                <Icon size={30} strokeWidth={isActive ? 2.5 : 1.6} />
+                <Icon size={22} strokeWidth={isActive ? 2.25 : 1.7} />
               </span>
             </Link>
           );
         })}
-
       </div>
 
       <style jsx>{`
@@ -49,111 +49,92 @@ export default function NavegacionMovil() {
           bottom: 0;
           left: 0;
           right: 0;
-          z-index: 5000; /* Extra high for map visibility */
+          z-index: 5000;
           display: flex;
           justify-content: center;
-          padding: 0 24px calc(24px + env(safe-area-inset-bottom, 0px));
+          padding: 0 20px calc(18px + env(safe-area-inset-bottom, 0px));
           pointer-events: none;
         }
 
         .nav-dock {
+          --item-size: 54px;
+          --dock-gap: 18px;
+          position: relative;
           display: flex;
           align-items: center;
-          gap: 48px;
-          padding: 20px 56px;
-          border-radius: 36px;
+          gap: var(--dock-gap);
+          padding: 10px 14px;
+          border-radius: 34px;
           pointer-events: auto;
-
-          /* Enhanced glassmorphism with theme adaptation */
-          background: linear-gradient(
-            135deg,
-            color-mix(in srgb, var(--bg-secondary) 90%, rgba(45, 35, 25, 0.1)) 0%,
-            color-mix(in srgb, var(--bg-secondary) 80%, rgba(60, 45, 30, 0.1)) 100%
-          );
-          backdrop-filter: blur(5px);
-          border: 1px solid rgba(255, 255, 255, 0.15);
+          background: color-mix(in srgb, var(--bg-secondary) 56%, rgba(35, 48, 56, 0.42));
+          backdrop-filter: blur(18px) saturate(180%);
+          -webkit-backdrop-filter: blur(18px) saturate(180%);
+          border: 1px solid rgba(255, 255, 255, 0.16);
           box-shadow:
-            0 12px 48px rgba(45, 35, 25, 0.5),
-            0 4px 16px rgba(60, 45, 30, 0.3),
+            0 14px 42px rgba(45, 35, 25, 0.32),
             0 0 0 1px rgba(255, 255, 255, 0.08) inset,
-            inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        }
+
+        .nav-indicator {
+          position: absolute;
+          top: 10px;
+          left: 14px;
+          width: var(--item-size);
+          height: var(--item-size);
+          border-radius: 50% 48% 55% 45% / 45% 55% 46% 54%;
+          background:
+            radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.72), transparent 22%),
+            linear-gradient(135deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1));
+          border: 1px solid rgba(255, 255, 255, 0.34);
+          box-shadow:
+            0 12px 28px rgba(201, 95, 60, 0.22),
+            inset 0 0 18px rgba(255, 255, 255, 0.22);
+          backdrop-filter: blur(10px) saturate(170%);
+          -webkit-backdrop-filter: blur(10px) saturate(170%);
+          transform: translateX(calc(var(--active-index) * (var(--item-size) + var(--dock-gap))));
+          transition: transform 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.18), border-radius 0.42s ease;
         }
 
         .dock-item {
           position: relative;
+          z-index: 1;
           display: flex;
           align-items: center;
           justify-content: center;
-          width: 80px;
-          height: 72px;
-          border-radius: 24px;
+          width: var(--item-size);
+          height: var(--item-size);
+          border-radius: 999px;
           text-decoration: none;
-          color: rgba(255, 255, 255, 0.5);
-          transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          color: color-mix(in srgb, var(--text-primary) 54%, transparent);
+          transition: color 0.2s ease, transform 0.2s ease;
           -webkit-tap-highlight-color: transparent;
-          cursor: pointer;
         }
 
         .dock-item:hover {
-          color: rgba(240, 135, 74, 0.9);
+          color: var(--brand-accent-strong);
           transform: translateY(-2px);
-          background: rgba(240, 135, 74, 0.1);
         }
 
+        .dock-item.active {
+          color: var(--brand-accent-strong);
+        }
 
-
-
-
-
+        .dock-item:active {
+          transform: scale(0.92);
+        }
 
         .dock-icon {
-          position: relative;
-          z-index: 2;
           display: flex;
           align-items: center;
           justify-content: center;
-        }
-
-
-
-        .dock-item.active {
-          color: var(--brand-accent-strong, #f0874a);
-        }
-
-
-
-        .dock-item:active {
-          transform: scale(0.9);
         }
 
         @media (max-width: 480px) {
           .nav-dock {
-            gap: 40px;
-            padding: 16px 44px;
-            border-radius: 32px;
-          }
-
-          .dock-item {
-            width: 78px;
-            height: 70px;
-          }
-
-
-
-          .dock-item:hover {
-            transform: none; /* Disable hover on mobile */
-          }
-        }
-
-          .dock-item {
-            width: 60px;
-            height: 50px;
-          }
-
-
-
-          .dock-item:hover {
-            transform: none; /* Disable hover on mobile */
+            --item-size: 48px;
+            --dock-gap: 14px;
+            padding: 9px 12px;
           }
         }
       `}</style>

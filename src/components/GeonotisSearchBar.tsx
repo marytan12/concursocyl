@@ -73,7 +73,8 @@ export default function GeonotisSearchBar({
         .geonotis-search.floating {
           position: absolute;
           left: 50%;
-          bottom: 88px;
+          top: 124px;
+          bottom: auto;
           transform: translateX(-50%);
           z-index: 950;
           width: min(90%, 460px);
@@ -110,7 +111,7 @@ export default function GeonotisSearchBar({
           overflow: hidden;
           border-radius: 28px;
           border: 1px solid rgba(255, 255, 255, 0.4);
-          background: color-mix(in srgb, var(--bg-primary) 30%, transparent);
+          background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
           backdrop-filter: blur(32px) saturate(220%);
           -webkit-backdrop-filter: blur(32px) saturate(220%);
           transition: border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
@@ -137,7 +138,7 @@ export default function GeonotisSearchBar({
         .geonotis-search.floating .search-icon,
         .geonotis-search.floating input,
         .geonotis-search.floating .icon-button {
-          color: #fff;
+          color: var(--text-primary);
         }
 
         input {
@@ -151,10 +152,6 @@ export default function GeonotisSearchBar({
           font: inherit;
           font-size: 17px;
           font-weight: 650;
-        }
-
-        .geonotis-search.floating input {
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         }
 
         input::placeholder {
@@ -203,7 +200,7 @@ export default function GeonotisSearchBar({
         }
 
         .geonotis-search.floating .spinner {
-          color: #fff;
+          color: var(--text-primary);
         }
 
         @keyframes shimmer {
@@ -217,7 +214,7 @@ export default function GeonotisSearchBar({
 
         @media (max-width: 768px) {
           .geonotis-search.floating {
-            bottom: 140px;
+            top: 146px;
           }
 
           input {

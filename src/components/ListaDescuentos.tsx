@@ -66,7 +66,8 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
             onClick={() => setCategoriaActiva(null)}
           >
             <IconSparkles size={16} />
-            Todas
+            <span>Todas</span>
+            <strong>{descuentos.length}</strong>
           </button>
           {categoriasDisponibles.map((categoria) => (
             <button
@@ -87,15 +88,10 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
               }
             >
               <CategoryIcon category={categoria} size={16} />
-              {categoria}
+              <span>{categoria}</span>
+              <strong>{descuentos.filter((descuento) => descuento.categoria === categoria).length}</strong>
             </button>
           ))}
-        </div>
-
-        <div className="results-info">
-          <span className="badge">
-            {filtrados.length} {filtrados.length === 1 ? 'oferta encontrada' : 'ofertas encontradas'}
-          </span>
         </div>
       </div>
 
@@ -137,55 +133,12 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
           gap: 20px;
         }
 
-        .search-box {
-          display: flex;
-          align-items: center;
-          padding: 8px 16px;
-          gap: 12px;
-          border-radius: 24px;
-          background: var(--surface-strong);
-          transition: all 0.3s;
-        }
-
-        .search-box:focus-within {
-          border-color: var(--border-active);
-          box-shadow: 0 0 0 4px color-mix(in srgb, var(--brand-accent) 10%, transparent);
-        }
-
-        .search-box .icon {
-          color: var(--text-muted);
-          display: flex;
-        }
-
-        .search-box input {
-          flex: 1;
-          background: transparent;
-          border: none;
-          padding: 12px 0;
-          font-size: 1.05rem;
-          color: var(--text-primary);
-          outline: none;
-        }
-
-        .search-box .clear {
-          background: var(--surface-soft);
-          border: none;
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--text-muted);
-          cursor: pointer;
-        }
-
         .category-scroller {
-          display: flex;
-          gap: 10px;
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+          gap: 12px;
           overflow-x: auto;
-          padding: 4px;
-          margin: 0 -4px;
+          padding: 2px;
           scrollbar-width: none;
         }
 
@@ -194,19 +147,43 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
         }
 
         .chip {
-          flex-shrink: 0;
           display: flex;
           align-items: center;
-          gap: 8px;
-          padding: 10px 18px;
-          border-radius: 99px;
+          justify-content: space-between;
+          gap: 10px;
+          min-height: 48px;
+          padding: 10px 12px;
+          border-radius: 18px;
           border: 1px solid var(--border-subtle);
-          background: var(--surface-soft);
+          background:
+            linear-gradient(135deg, color-mix(in srgb, var(--surface-strong) 92%, transparent), color-mix(in srgb, var(--surface-soft) 78%, transparent));
           color: var(--text-secondary);
-          font-size: 14px;
-          font-weight: 600;
+          font-size: 13px;
+          font-weight: 800;
           cursor: pointer;
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          box-shadow: 0 10px 22px rgba(116, 83, 53, 0.06);
+          text-align: left;
+        }
+
+        .chip span {
+          min-width: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .chip strong {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          min-width: 28px;
+          height: 24px;
+          padding: 0 8px;
+          border-radius: 999px;
+          background: color-mix(in srgb, var(--chip-color, var(--brand-accent)) 14%, transparent);
+          color: var(--chip-color, var(--brand-accent-strong));
+          font-size: 12px;
         }
 
         .chip.all.active {
@@ -220,19 +197,6 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
           border-color: var(--chip-color, var(--border-active));
           color: var(--text-primary);
           transform: translateY(-2px);
-        }
-
-        .results-info {
-          padding-left: 4px;
-        }
-
-        .results-info .badge {
-          font-size: 13px;
-          font-weight: 700;
-          color: var(--text-muted);
-          background: color-mix(in srgb, var(--text-muted) 8%, transparent);
-          padding: 4px 12px;
-          border-radius: 8px;
         }
 
         .discounts-grid {

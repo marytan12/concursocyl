@@ -171,9 +171,7 @@
 }
 
 .contentGrid {
-  display: grid;
-  grid-template-columns: 1.8fr 1fr;
-  gap: 24px;
+  display: block;
 }
 
 .mainColumn,
@@ -226,7 +224,7 @@
 
 .discountGrid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 14px;
 }
 
@@ -263,7 +261,7 @@
 }
 
 .discountGrid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
 .discountCard {
@@ -312,6 +310,10 @@
   .heroPanel,
   .contentGrid {
     grid-template-columns: 1fr;
+  }
+
+  .discountGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .spotlightCard {
@@ -445,5 +447,3 @@
     padding: 6px 9px;
   }
 }
-
-

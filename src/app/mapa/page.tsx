@@ -111,7 +111,6 @@ export default function MapaPage() {
 
   return (
     <div className="mapa-page">
-      {/* â”€â”€â”€ Floating top bar â”€â”€â”€ */}
       <div className="floating-bar">
         <div className="bar-left">
           <div className="bar-title-group">
@@ -132,12 +131,28 @@ export default function MapaPage() {
         </button>
       </div>
 
-      {/* â”€â”€â”€ Map viewport â”€â”€â”€ */}
       <div className="map-viewport">
         <div className="map-inner">
           <MapaInteractivo markers={markers} onMarkerClick={handleMarkerClick} />
         </div>
 
+        <div className="floating-chips">
+          {categoriasVisibles.map((cat) => (
+            <button
+              key={cat}
+              className={`chip-glass ${filtros.categoria === cat ? 'active' : ''}`}
+              onClick={() =>
+                setFiltros((actuales) => ({
+                  ...actuales,
+                  categoria: actuales.categoria === cat ? undefined : cat,
+                }))
+              }
+            >
+              <CategoryIcon category={cat} size={14} />
+              <span>{cat}</span>
+            </button>
+          ))}
+        </div>
 
         <GeonotisSearchBar
           value={mapSearch}
@@ -148,17 +163,7 @@ export default function MapaPage() {
           isSearching={loading}
           variant="floating"
         />
-        {/* â”€â”€â”€ Floating category chips â”€â”€â”€ */}
-        <div className="floating-chips">
-          {categoriasVisibles.map((cat) => (
-            <button key={cat} className="chip-glass">
-              <CategoryIcon category={cat} size={14} />
-              <span>{cat}</span>
-            </button>
-          ))}
-        </div>
 
-        {/* â”€â”€â”€ Event detail panel â”€â”€â”€ */}
         {selectedEvento && (
           <>
             <div
@@ -185,15 +190,15 @@ export default function MapaPage() {
         .mapa-page {
           display: flex;
           flex-direction: column;
-          height: calc(100dvh - 72px);
+          height: 100dvh;
+          margin-top: -80px;
           position: relative;
           overflow: hidden;
         }
 
-        /* â”€â”€â”€ Floating top bar â”€â”€â”€ */
         .floating-bar {
           position: absolute;
-          top: 16px;
+          top: 18px;
           left: 16px;
           right: 16px;
           z-index: 1000;
@@ -294,7 +299,6 @@ export default function MapaPage() {
           justify-content: center;
         }
 
-        /* â”€â”€â”€ Map viewport â”€â”€â”€ */
         .map-viewport {
           flex: 1;
           position: relative;
@@ -306,21 +310,18 @@ export default function MapaPage() {
           height: 100%;
         }
 
-        /* â”€â”€â”€ Floating chips â”€â”€â”€ */
         .floating-chips {
           position: absolute;
-          bottom: 24px;
+          top: 76px;
           left: 16px;
           right: 16px;
-          z-index: 800;
+          z-index: 960;
           display: flex;
           gap: 8px;
           overflow-x: auto;
           scrollbar-width: none;
           pointer-events: auto;
           padding: 2px;
-          mask-image: linear-gradient(to right, black 90%, transparent 100%);
-          -webkit-mask-image: linear-gradient(to right, black 90%, transparent 100%);
         }
 
         .floating-chips::-webkit-scrollbar {
@@ -349,6 +350,12 @@ export default function MapaPage() {
           transition: all 0.2s ease;
         }
 
+        .chip-glass.active {
+          background: var(--brand-accent-strong);
+          border-color: transparent;
+          color: #fff;
+        }
+
         .chip-glass:hover {
           border-color: var(--border-active);
           box-shadow:
@@ -356,7 +363,6 @@ export default function MapaPage() {
             0 0 0 1px rgba(255, 255, 255, 0.1) inset;
         }
 
-        /* â”€â”€â”€ Panel backdrop â”€â”€â”€ */
         .panel-backdrop {
           position: absolute;
           inset: 0;
@@ -371,10 +377,10 @@ export default function MapaPage() {
           to { opacity: 1; }
         }
 
-        /* â”€â”€â”€ Responsive â”€â”€â”€ */
         @media (max-width: 768px) {
           .mapa-page {
-            height: calc(100dvh - 68px);
+            height: 100dvh;
+            margin-top: -74px;
           }
 
           .floating-bar {
@@ -390,7 +396,7 @@ export default function MapaPage() {
           }
 
           .floating-chips {
-            bottom: 80px;
+            top: 68px;
             left: 10px;
             right: 10px;
           }
