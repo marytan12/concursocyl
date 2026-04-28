@@ -169,19 +169,62 @@ export default function TarjetaDescuento({
         <style jsx>{`
           .tarjeta-descuento-detail {
             position: fixed;
-            bottom: 80px;
-            left: 8px;
-            right: 8px;
-            max-width: 480px;
+            bottom: 109px;
+            left: 0;
+            right: 0;
             margin: 0 auto;
-            background: var(--surface-highlight);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            box-shadow: var(--shadow-card);
-            overflow: hidden;
-            z-index: var(--z-modal);
-            max-height: 70vh;
+            width: min(94vw, 460px);
+            max-height: calc(100vh - 180px);
+            z-index: 6000;
+            background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
+            backdrop-filter: blur(28px) saturate(180%);
+            -webkit-backdrop-filter: blur(28px) saturate(180%);
+            border: 1px solid color-mix(in srgb, var(--border-subtle) 70%, transparent);
+            border-radius: 42px 42px 0 0;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.06);
             overflow-y: auto;
+            animation: panelSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+          }
+
+            @media (max-width: 768px) {
+              .tarjeta-descuento-detail {
+                bottom: 88px;
+                left: 2vw;
+                right: 2vw;
+                width: 96vw;
+                max-height: 72vh;
+                border-radius: 32px 32px 0 0;
+                animation: sheetSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+              }
+
+              .content {
+                padding: 12px 20px 100px !important;
+              }
+
+              .close-btn {
+                top: 20px !important;
+                right: 20px !important;
+              }
+            }
+
+          @keyframes panelSlideIn {
+            from {
+              opacity: 0;
+              transform: translateY(20px) scale(0.98);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
+          @keyframes sheetSlideUp {
+            from {
+              transform: translateY(100%);
+            }
+            to {
+              transform: translateY(0);
+            }
           }
 
           .drag-handle {

@@ -163,10 +163,13 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
       <style jsx>{`
         .event-panel {
           position: fixed;
-          bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-          right: 12px;
-          width: min(90vw, 460px);
-          height: calc(100vh - 18px - env(safe-area-inset-bottom, 0px));
+          bottom: 109px;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          width: min(94vw, 460px);
+          height: auto;
+          max-height: calc(100vh - 180px);
           z-index: 6000;
           border-radius: 42px 42px 0 0;
           background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
@@ -180,21 +183,12 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
           display: flex;
           flex-direction: column;
           animation: panelSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
-
-        @media (max-width: 768px) {
-          border-radius: 24px 24px 0 0;
-          width: 90%;
-          height: 78vh;
-          animation: 0.4s cubic-bezier(0.16, 1, 0.3, 1) sheetSlideUp;
-          position: fixed;
-          inset: auto 0 90px;
-        }
         }
 
         @keyframes panelSlideIn {
           from {
             opacity: 0;
-            transform: translateY(100%) scale(0.96);
+            transform: translateY(20px) scale(0.98);
           }
           to {
             opacity: 1;
@@ -215,7 +209,7 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
           flex: 1;
           overflow-y: auto;
           scrollbar-width: thin;
-          scrollbar-color: var(--border-subtle) transparent;
+          scrollbar-color: #ffe9d600 transparent;
         }
 
         .drag-bar {
@@ -447,12 +441,13 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
           .event-panel {
             position: fixed;
             top: auto;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            width: 100%;
-            height: 78vh;
-            border-radius: 24px 24px 0 0;
+            left: 2vw;
+            right: 2vw;
+            bottom: 88px;
+            width: 96vw;
+            height: auto;
+            max-height: 72vh;
+            border-radius: 32px 32px 0 0;
             animation: sheetSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1);
           }
 

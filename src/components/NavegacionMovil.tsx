@@ -84,12 +84,12 @@ export default function NavegacionMovil() {
 
         :global(body.panel-open) .bottom-nav {
           z-index: 8000;
+          transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         @media (max-width: 768px) {
           :global(body.panel-open) .bottom-nav {
             padding: 0;
-            transition: all 0.4s ease;
           }
 
           :global(body.panel-open) .nav-dock {
@@ -98,7 +98,7 @@ export default function NavegacionMovil() {
             border-bottom: none;
             border-left: none;
             border-right: none;
-            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.18);
           }
         }
 
