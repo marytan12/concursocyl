@@ -38,7 +38,7 @@ export default function NavegacionMovil() {
                 aria-label={tab.label}
               >
                 <span className="dock-icon">
-                  <Icon size={22} strokeWidth={isActive ? 2.25 : 1.7} />
+                  <Icon size={28} strokeWidth={isActive ? 2.25 : 1.7} />
                 </span>
               </Link>
             );
@@ -71,16 +71,45 @@ export default function NavegacionMovil() {
           justify-content: space-between;
           padding: 10px 14px;
           border-radius: 42px;
+          transition: border-radius 0.45s ease;
           pointer-events: auto;
           background: color-mix(in srgb, var(--bg-secondary) 56%, rgba(35, 48, 56, 0.42));
           backdrop-filter: blur(18px) saturate(180%);
-          -webkit-backdrop-filter: blur(18px) saturate(180%);
           border: 1px solid rgba(255, 255, 255, 0.16);
           box-shadow:
             0 14px 42px rgba(45, 35, 25, 0.32),
             0 0 0 1px rgba(255, 255, 255, 0.08) inset,
             inset 0 1px 0 rgba(255, 255, 255, 0.18);
         }
+
+        :global(body.panel-open) .bottom-nav {
+          z-index: 8000;
+        }
+
+        @media (max-width: 768px) {
+          :global(body.panel-open) .bottom-nav {
+            padding: 0;
+            transition: all 0.4s ease;
+          }
+
+          :global(body.panel-open) .nav-dock {
+            width: 100%;
+            border-radius: 0 !important;
+            border-bottom: none;
+            border-left: none;
+            border-right: none;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+          }
+        }
+
+        /* En desktop seguimos con el estilo flotante pero con radius de arriba a cero */
+        @media (min-width: 769px) {
+          :global(body.panel-open) .nav-dock {
+            border-radius: 0 0 42px 42px !important;
+          }
+        }
+
+
 
         .dock-tabs {
           position: relative;
@@ -112,7 +141,7 @@ export default function NavegacionMovil() {
           backdrop-filter: blur(14px) saturate(140%);
           -webkit-backdrop-filter: blur(14px) saturate(140%);
           transform: translateY(-50%);
-          transition: transform 0.42s cubic-bezier(0.175, 0.885, 0.32, 1.18), border-radius 0.42s ease;
+          transition: left 0.4s, border-radius 0.4s ease;
         }
 
         .dock-item {
@@ -150,6 +179,8 @@ export default function NavegacionMovil() {
         }
 
         .dock-separator {
+          margin-left: 10px;
+          margin-right: 10px;
           width: 1px;
           height: 34px;
           background: color-mix(in srgb, var(--text-primary) 18%, transparent);
@@ -160,8 +191,21 @@ export default function NavegacionMovil() {
           width: 62px;
           height: 62px;
           padding: 0;
+          margin-right: 10px;
           border-radius: 999px;
           background: color-mix(in srgb, var(--surface-strong) 58%, transparent);
+        }
+
+        @media (min-width: 768px) {
+          .nav-dock {
+            --item-size: 70px;
+          }
+
+          .nav-dock :global(.toggle-tema) {
+            min-width: 70px;
+            width: 70px;
+            height: 70px;
+          }
         }
 
         @media (max-width: 480px) {

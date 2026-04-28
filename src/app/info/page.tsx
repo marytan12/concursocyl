@@ -19,8 +19,8 @@ export default function InfoPage() {
           <span className={styles.sectionKicker}>Desarrollo</span>
           <h2>Autor</h2>
           <p>
-            Esta aplicacion ha sido desarrollada por <strong>Mario Rodriguez Guerra</strong> y{' '}
-            <strong>Guillermo Campos San Jose</strong>.
+            Esta aplicacion ha sido desarrollada por <strong>Mario Rodríguez Guerra</strong> y{' '}
+            <strong>Guillermo Campos San José</strong>.
           </p>
         </article>
 

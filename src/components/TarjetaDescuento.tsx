@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import {
   COLORES_CATEGORIA,
   CATEGORIAS_DESCUENTO,
@@ -52,6 +53,16 @@ export default function TarjetaDescuento({
   const address = descuento.direccion?.trim() || null;
   const domain = getDomainLabel(descuento.enlace);
   const { isFavorite, toggleFavorite } = useFavorites('descuentos');
+
+  useEffect(() => {
+    if (variant === 'detail') {
+      document.body.classList.add('panel-open');
+      return () => {
+        document.body.classList.remove('panel-open');
+      };
+    }
+  }, [variant]);
+
   const directionsUrl = getDirectionsUrl({
     lat: descuento.latitud,
     lng: descuento.longitud,

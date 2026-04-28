@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import { useCallback, useEffect, useState } from 'react';
 import dynamic from 'next/dynamic';
@@ -73,6 +73,8 @@ export default function MapaPage() {
 
     return () => window.clearTimeout(timer);
   }, [fetchEventos]);
+
+
 
   const distanceKm = useCallback((evento: Evento) => {
     if (!userLocation) return Number.POSITIVE_INFINITY;
@@ -346,6 +348,7 @@ export default function MapaPage() {
             width: min(90vw, 460px);
           }
         }
+
       `}</style>
 
       <style jsx>{`

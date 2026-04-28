@@ -42,7 +42,7 @@ export default function ToggleTema() {
             transition={{ duration: 0.2 }}
             style={{ display: 'flex' }}
           >
-            <IconMoon size={16} />
+            <IconMoon size={24} />
           </motion.span>
         ) : (
           <motion.span
@@ -53,7 +53,7 @@ export default function ToggleTema() {
             transition={{ duration: 0.2 }}
             style={{ display: 'flex' }}
           >
-            <IconSun size={16} />
+            <IconSun size={24} />
           </motion.span>
         )}
       </AnimatePresence>

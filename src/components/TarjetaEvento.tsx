@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect } from 'react';
 import Image from 'next/image';
 import { formatearFecha, COLORES_CATEGORIA, CATEGORIAS_EVENTO } from '@/lib/utils';
 import { getDirectionsUrl, shareContent } from '@/lib/clientActions';
@@ -29,6 +30,13 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
   const color = COLORES_CATEGORIA[evento.categoria] || '#6B7280';
   const catLabel = CATEGORIAS_EVENTO[evento.categoria as CategoriaEvento] || evento.categoria;
   const { isFavorite, toggleFavorite } = useFavorites('eventos');
+
+  useEffect(() => {
+    document.body.classList.add('panel-open');
+    return () => {
+      document.body.classList.remove('panel-open');
+    };
+  }, []);
   const directionsUrl = getDirectionsUrl({
     lat: evento.latitud,
     lng: evento.longitud,
@@ -154,13 +162,13 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
 
       <style jsx>{`
         .event-panel {
-          position: absolute;
-          top: 12px;
+          position: fixed;
+          bottom: calc(18px + env(safe-area-inset-bottom, 0px));
           right: 12px;
-          bottom: 12px;
-          width: 380px;
-          z-index: 2000;
-          border-radius: 22px;
+          width: min(90vw, 460px);
+          height: calc(100vh - 18px - env(safe-area-inset-bottom, 0px));
+          z-index: 6000;
+          border-radius: 42px 42px 0 0;
           background: color-mix(in srgb, var(--bg-primary) 88%, transparent);
           backdrop-filter: blur(28px) saturate(180%);
           -webkit-backdrop-filter: blur(28px) saturate(180%);
@@ -172,16 +180,34 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
           display: flex;
           flex-direction: column;
           animation: panelSlideIn 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+
+        @media (max-width: 768px) {
+          border-radius: 24px 24px 0 0;
+          width: 90%;
+          height: 78vh;
+          animation: 0.4s cubic-bezier(0.16, 1, 0.3, 1) sheetSlideUp;
+          position: fixed;
+          inset: auto 0 90px;
+        }
         }
 
         @keyframes panelSlideIn {
           from {
             opacity: 0;
-            transform: translateX(24px) scale(0.96);
+            transform: translateY(100%) scale(0.96);
           }
           to {
             opacity: 1;
-            transform: translateX(0) scale(1);
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @keyframes sheetSlideUp {
+          from {
+            transform: translateY(100%);
+          }
+          to {
+            transform: translateY(0);
           }
         }
 
@@ -197,7 +223,9 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
         }
 
         .panel-header {
+          position: relative;
           padding: 24px 24px 16px;
+          text-align: center;
         }
 
         .quick-actions {
@@ -231,9 +259,35 @@ export default function TarjetaEvento({ evento, onClose }: Props) {
           transform: scale(0.94);
         }
 
+        .close-btn {
+          position: absolute;
+          top: 24px;
+          right: 24px;
+          width: 32px;
+          height: 32px;
+          border-radius: 999px;
+          border: 1px solid var(--border-subtle);
+          background: color-mix(in srgb, var(--surface-soft) 70%, transparent);
+          color: var(--text-secondary);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: transform 0.15s ease, color 0.15s ease, background 0.15s ease;
+        }
+
+        .close-btn:hover {
+          background: color-mix(in srgb, var(--brand-accent) 14%, var(--surface-strong));
+          color: var(--brand-accent-strong);
+        }
+
+        .close-btn:active {
+          transform: scale(0.94);
+        }
+
         .header-row {
           display: flex;
-          justify-content: space-between;
+          justify-content: center;
           align-items: center;
           margin-bottom: 14px;
         }
