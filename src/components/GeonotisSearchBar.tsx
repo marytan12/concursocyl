@@ -214,11 +214,19 @@ export default function GeonotisSearchBar({
 
         @media (max-width: 768px) {
           .geonotis-search.floating {
-            bottom: 112px;
+            bottom: calc(94px + env(safe-area-inset-bottom, 0px));
+            width: calc(100vw - 24px);
           }
 
           input {
             font-size: 16px;
+            padding-top: 13px;
+            padding-bottom: 13px;
+          }
+
+          .search-shell,
+          .search-form {
+            border-radius: 22px;
           }
         }
       `}</style>

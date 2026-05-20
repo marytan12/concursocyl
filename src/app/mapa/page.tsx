@@ -385,8 +385,23 @@ export default function MapaPage() {
           }
 
           .floating-chips {
-            bottom: 176px;
-            width: min(90vw, 460px);
+            bottom: calc(154px + env(safe-area-inset-bottom, 0px));
+            left: 12px;
+            right: 12px;
+            width: auto;
+            transform: none;
+            gap: 7px;
+            padding: 2px 2px 8px;
+            scroll-snap-type: x proximity;
+          }
+
+          .chip-glass {
+            flex: 0 0 auto;
+            min-height: 38px;
+            padding: 9px 13px;
+            border-radius: 13px;
+            scroll-snap-align: start;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.14);
           }
         }
 

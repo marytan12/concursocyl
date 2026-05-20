@@ -5,6 +5,8 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
+  width: 100%;
+  min-width: 0;
 }
 
 .heroCard,
@@ -13,6 +15,8 @@
   border-radius: 28px;
   border: 1px solid var(--border-subtle);
   box-shadow: var(--shadow-soft);
+  min-width: 0;
+  overflow: hidden;
 }
 
 .heroCard {
@@ -37,6 +41,8 @@
   letter-spacing: 0.04em;
   text-transform: uppercase;
   margin-bottom: 10px;
+  max-width: 100%;
+  white-space: normal;
 }
 
 .infoPage h1,
@@ -60,6 +66,7 @@
 .infoPage li {
   color: var(--text-secondary);
   line-height: 1.65;
+  overflow-wrap: anywhere;
 }
 
 .infoPage ul {
@@ -88,7 +95,8 @@
 
 @media (max-width: 720px) {
   .infoPage {
-    padding: 12px 10px 44px;
+    padding: 10px 10px 34px;
+    gap: 12px;
   }
 
   .grid {
@@ -98,7 +106,21 @@
   .heroCard,
   .panel {
     padding: 16px;
-    border-radius: 24px;
+    border-radius: 22px;
+  }
+
+  .infoPage h1 {
+    font-size: 1.95rem;
+    line-height: 1.05;
+  }
+
+  .infoPage h2 {
+    font-size: 1.22rem;
+  }
+
+  .infoPage p,
+  .infoPage li {
+    line-height: 1.55;
   }
 
   .links {

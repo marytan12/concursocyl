@@ -448,6 +448,8 @@ export default function TarjetaDescuento({
             0 0 0 1px rgba(255, 255, 255, 0.08) inset,
             inset 0 1px 0 rgba(255, 255, 255, 0.1);
           transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          min-width: 0;
+          overflow: hidden;
         }
 
         .tarjeta-descuento-card:hover {
@@ -468,6 +470,7 @@ export default function TarjetaDescuento({
           display: flex;
           align-items: center;
           justify-content: space-between;
+          gap: 10px;
         }
 
         .category-pill {
@@ -483,6 +486,7 @@ export default function TarjetaDescuento({
           border: 1px solid;
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
+          min-width: 0;
         }
 
         .discount-tag {
@@ -570,6 +574,70 @@ export default function TarjetaDescuento({
           font-size: 12px;
           font-weight: 800;
           cursor: pointer;
+        }
+
+        @media (max-width: 640px) {
+          .tarjeta-descuento-card {
+            padding: 18px;
+            gap: 14px;
+            border-radius: 24px;
+          }
+
+          .tarjeta-descuento-card:hover {
+            transform: translateY(-2px);
+          }
+
+          .category-pill {
+            max-width: 72%;
+            padding: 7px 11px;
+            font-size: 10px;
+            letter-spacing: 0.03em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .discount-tag {
+            flex-shrink: 0;
+            font-size: 14px;
+          }
+
+          .title {
+            font-size: 1.08rem;
+            line-height: 1.25;
+          }
+
+          .excerpt {
+            font-size: 0.9rem;
+            line-height: 1.5;
+            -webkit-line-clamp: 2;
+          }
+
+          .card-footer {
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 10px;
+          }
+
+          .location {
+            flex: 1 1 100%;
+            min-width: 0;
+          }
+
+          .location span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          .card-actions {
+            width: 100%;
+            justify-content: flex-end;
+          }
+
+          .details-action {
+            min-width: 86px;
+          }
         }
       `}</style>
     </div>

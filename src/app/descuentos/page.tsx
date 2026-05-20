@@ -78,6 +78,9 @@ export default function DescuentosPage() {
           flex-direction: column;
           gap: 28px;
           min-height: 100dvh;
+          width: 100%;
+          min-width: 0;
+          overflow: hidden;
         }
 
         .page-header {
@@ -99,6 +102,7 @@ export default function DescuentosPage() {
           font-weight: 900;
           line-height: 1.05;
           color: var(--text-primary);
+          overflow-wrap: anywhere;
         }
 
         .page-header h1 small {
@@ -131,12 +135,18 @@ export default function DescuentosPage() {
 
         @media (max-width: 480px) {
           .descuentos-page {
-            padding: 16px 12px 90px;
-            gap: 22px;
+            padding: 14px 10px 96px;
+            gap: 18px;
           }
 
           .page-header h1 {
-            font-size: 2.1rem;
+            font-size: 2rem;
+            line-height: 1.08;
+          }
+
+          .page-header h1 small {
+            display: inline-flex;
+            font-size: 0.86rem;
           }
         }
       `}</style>

@@ -70,6 +70,7 @@ export default function NavegacionMovil() {
           align-items: center;
           gap: 10px;
           width: min(90vw, 460px);
+          box-sizing: border-box;
           justify-content: space-between;
           padding: 10px 14px;
           border-radius: 42px;
@@ -211,16 +212,33 @@ export default function NavegacionMovil() {
         }
 
         @media (max-width: 480px) {
+          .bottom-nav {
+            padding: 0 10px calc(12px + env(safe-area-inset-bottom, 0px));
+          }
+
           .nav-dock {
-            --item-size: 52px;
-            width: min(90vw, 460px);
-            padding: 9px 12px;
+            --item-size: 47px;
+            width: 100%;
+            gap: 4px;
+            padding: 8px 9px;
+            border-radius: 30px;
+          }
+
+          .dock-tabs {
+            height: var(--item-size);
+          }
+
+          .dock-separator {
+            margin-left: 4px;
+            margin-right: 4px;
+            height: 28px;
           }
 
           .nav-dock :global(.toggle-tema) {
-            min-width: 54px;
-            width: 54px;
-            height: 54px;
+            min-width: 46px;
+            width: 46px;
+            height: 46px;
+            margin-right: 0;
           }
         }
       `}</style>

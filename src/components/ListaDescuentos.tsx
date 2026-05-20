@@ -156,6 +156,7 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
           display: flex;
           flex-direction: column;
           gap: 32px;
+          min-width: 0;
         }
 
         .filter-section {
@@ -278,8 +279,37 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
         }
 
         @media (max-width: 640px) {
+          .lista-descuentos {
+            gap: 22px;
+          }
+
+          .filter-section {
+            gap: 14px;
+          }
+
+          .category-scroller {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding: 2px 4px 8px;
+            margin: 0 -2px;
+            scroll-snap-type: x proximity;
+          }
+
+          .chip {
+            flex: 0 0 auto;
+            min-width: 138px;
+            scroll-snap-align: start;
+            border-radius: 16px;
+          }
+
+          .chip.show-more {
+            min-width: 170px;
+          }
+
           .discounts-grid {
             grid-template-columns: 1fr;
+            gap: 14px;
           }
         }
       `}</style>
