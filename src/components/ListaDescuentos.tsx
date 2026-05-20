@@ -219,10 +219,15 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
         }
 
         .chip.all.active {
-          background: var(--brand-accent-strong);
-          color: #fff;
+          background: #8f3d19;
+          color: #fffaf5;
           border-color: transparent;
           box-shadow: 0 8px 20px color-mix(in srgb, var(--brand-accent) 30%, transparent);
+        }
+
+        .chip.all.active strong {
+          background: rgba(255, 250, 245, 0.18);
+          color: #fffaf5;
         }
 
         .chip:not(.active):hover {
@@ -232,10 +237,15 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
         }
 
         .chip.favorite-chip.active {
-          background: var(--brand-accent-strong);
-          color: #fff;
+          background: #8f3d19;
+          color: #fffaf5;
           border-color: transparent;
           box-shadow: 0 8px 20px color-mix(in srgb, var(--brand-accent) 30%, transparent);
+        }
+
+        .chip.favorite-chip.active strong {
+          background: rgba(255, 250, 245, 0.18);
+          color: #fffaf5;
         }
 
         .chip.show-more {

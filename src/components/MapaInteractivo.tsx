@@ -95,6 +95,41 @@ function RecenterMap({ center, zoom }: { center: [number, number]; zoom: number 
   return null;
 }
 
+function MapAccessibilityLayer({ markers }: { markers: MarkerData[] }) {
+  const map = useMap();
+
+  useEffect(() => {
+    const updateMarkerAccessibility = () => {
+      const titles = new Map(markers.map((marker) => [marker.id, marker.titulo]));
+
+      map.getContainer().querySelectorAll<HTMLElement>('.leaflet-marker-icon').forEach((element) => {
+        const markerId = element.dataset.markerId;
+        const label = markerId ? titles.get(markerId) : element.textContent?.trim();
+
+        if (label) {
+          element.setAttribute('aria-label', label);
+          element.setAttribute('title', label);
+        }
+
+        if (window.matchMedia('(max-width: 768px)').matches) {
+          element.setAttribute('tabindex', '-1');
+        }
+      });
+    };
+
+    updateMarkerAccessibility();
+    const timer = window.setTimeout(updateMarkerAccessibility, 350);
+    map.on('moveend zoomend layeradd', updateMarkerAccessibility);
+
+    return () => {
+      window.clearTimeout(timer);
+      map.off('moveend zoomend layeradd', updateMarkerAccessibility);
+    };
+  }, [map, markers]);
+
+  return null;
+}
+
 const GLOBAL_ICON_CACHE: Record<string, L.DivIcon> = {};
 
 function getIcon(categoria: string) {
@@ -156,6 +191,7 @@ export default function MapaInteractivo({
         />
 
         <RecenterMap center={center} zoom={zoom} />
+        <MapAccessibilityLayer markers={markers} />
 
         <MarkerClusterGroup
           chunkedLoading
@@ -170,8 +206,16 @@ export default function MapaInteractivo({
               key={marker.id}
               position={[marker.lat, marker.lng]}
               icon={getIcon(marker.categoria)}
+              title={marker.titulo}
+              alt={marker.titulo}
               eventHandlers={{
                 click: () => handleMarkerClick(marker),
+                add: (event) => {
+                  const element = event.target.getElement() as HTMLElement | undefined;
+                  element?.setAttribute('data-marker-id', marker.id);
+                  element?.setAttribute('aria-label', marker.titulo);
+                  element?.setAttribute('title', marker.titulo);
+                },
               }}
             >
               <Popup>

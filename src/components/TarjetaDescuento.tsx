@@ -369,7 +369,7 @@ export default function TarjetaDescuento({
       </div>
 
       <div className="card-body">
-        <h4 className="title">{descuento.nombre}</h4>
+        <h2 className="title">{descuento.nombre}</h2>
         <p className="excerpt">{descuento.descripcion}</p>
       </div>
 

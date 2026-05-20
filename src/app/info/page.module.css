@@ -86,6 +86,43 @@
   background: var(--surface-warm);
 }
 
+.auditPanel {
+  background: var(--surface-highlight);
+}
+
+.scoreGrid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.scoreItem {
+  min-width: 0;
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--surface-strong);
+  padding: 14px;
+}
+
+.scoreValue {
+  display: block;
+  font-family: var(--font-display), 'Inter', sans-serif;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--brand-accent-strong);
+  margin-bottom: 6px;
+}
+
+.scoreItem span {
+  color: var(--text-secondary);
+  font-weight: 800;
+}
+
+.auditChecks {
+  margin-top: 8px;
+}
+
 .links {
   display: flex;
   flex-wrap: wrap;
@@ -125,6 +162,20 @@
 
   .links {
     flex-direction: column;
+  }
+
+  .scoreGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .scoreItem {
+    border-radius: 16px;
+    padding: 12px;
+  }
+
+  .scoreValue {
+    font-size: 1.7rem;
   }
 
   .links :global(.btn-pill) {

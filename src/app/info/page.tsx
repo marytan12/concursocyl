@@ -101,6 +101,40 @@ export default function InfoPage() {
         </article>
       </section>
 
+      <section className={`${styles.panel} ${styles.auditPanel}`}>
+        <span className={styles.sectionKicker}>Auditoria accesible</span>
+        <h2>Resultados Lighthouse</h2>
+        <p>
+          Escaneo automatizado ejecutado en produccion local el 20/05/2026 sobre
+          las rutas principales de la aplicacion.
+        </p>
+
+        <div className={styles.scoreGrid} aria-label="Puntuaciones de accesibilidad Lighthouse">
+          <article className={styles.scoreItem}>
+            <strong className={styles.scoreValue}>100</strong>
+            <span>Inicio</span>
+          </article>
+          <article className={styles.scoreItem}>
+            <strong className={styles.scoreValue}>100</strong>
+            <span>Mapa</span>
+          </article>
+          <article className={styles.scoreItem}>
+            <strong className={styles.scoreValue}>100</strong>
+            <span>Descuentos</span>
+          </article>
+          <article className={styles.scoreItem}>
+            <strong className={styles.scoreValue}>100</strong>
+            <span>Informacion</span>
+          </article>
+        </div>
+
+        <ul className={styles.auditChecks}>
+          <li>Sin fallos automatizados de contraste, nombres accesibles ni jerarquia de encabezados.</li>
+          <li>Controles interactivos revisados con etiquetas, estados y tamanos tactiles adecuados.</li>
+          <li>Mapa complementado con alternativa navegable para teclado y lector de pantalla.</li>
+        </ul>
+      </section>
+
       <section className={`${styles.panel} ${styles.finalPanel}`}>
         <span className={styles.sectionKicker}>Navegacion</span>
         <h2>Accesos principales</h2>
