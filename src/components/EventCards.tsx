@@ -35,7 +35,7 @@ interface EventCardsProps {
 }
 
 export default function EventCards({ eventos }: EventCardsProps) {
-  const [selectedEvent, setSelectedEvent] = useState<any>(null);
+  const [selectedEvent, setSelectedEvent] = useState<EventCardsProps['eventos'][number] | null>(null);
 
   return (
     <>
@@ -56,9 +56,10 @@ export default function EventCards({ eventos }: EventCardsProps) {
                   {EVENT_LABELS[evento.categoria] ?? evento.categoria}
                 </span>
                 <button
+                  type="button"
                   className={styles.infoButton}
                   onClick={() => setSelectedEvent(evento)}
-                  aria-label="Más detalles"
+                  aria-label={`Mas detalles de ${evento.titulo}`}
                 >
                   <IconInfo size={16} />
                 </button>
@@ -75,7 +76,13 @@ export default function EventCards({ eventos }: EventCardsProps) {
 
       {selectedEvent && (
         <div className={styles.popupOverlay} onClick={() => setSelectedEvent(null)}>
-          <div className={styles.popupContent} onClick={(e) => e.stopPropagation()}>
+          <div
+            className={styles.popupContent}
+            role="dialog"
+            aria-modal="true"
+            aria-label={selectedEvent.titulo}
+            onClick={(e) => e.stopPropagation()}
+          >
             <TarjetaEvento
               evento={{
                 id: selectedEvent.id,

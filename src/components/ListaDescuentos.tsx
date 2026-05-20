@@ -68,8 +68,10 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
 
         <div className="category-scroller">
           <button
+            type="button"
             className={`chip all ${!categoriaActiva ? 'active' : ''}`}
             onClick={() => setCategoriaActiva(null)}
+            aria-pressed={!categoriaActiva}
           >
             <IconSparkles size={16} />
             <span>Todas</span>
@@ -77,8 +79,10 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
           </button>
           {showAllFilters ? (
             <button
+              type="button"
               className={`chip favorite-chip ${onlyFavorites ? 'active' : ''}`}
               onClick={() => setOnlyFavorites((value) => !value)}
+              aria-pressed={onlyFavorites}
             >
               <IconSparkles size={16} />
               <span>Favoritos</span>
@@ -87,9 +91,11 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
           ) : null}
           {categoriasVisibles.map((categoria) => (
             <button
+              type="button"
               key={categoria}
               className={`chip ${categoriaActiva === categoria ? 'active' : ''}`}
               onClick={() => setCategoriaActiva(categoriaActiva === categoria ? null : categoria)}
+              aria-pressed={categoriaActiva === categoria}
               style={
                 categoriaActiva === categoria
                   ? {
@@ -109,7 +115,7 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
             </button>
           ))}
           {categoriasDisponibles.length > 1 ? (
-            <button className="chip show-more" onClick={() => setShowAllFilters((value) => !value)}>
+            <button type="button" className="chip show-more" onClick={() => setShowAllFilters((value) => !value)}>
               <span>{showAllFilters ? 'Mostrar menos filtros' : 'Mostrar mas filtros'}</span>
             </button>
           ) : null}
@@ -118,9 +124,12 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
 
       <div className="discounts-grid">
         {filtrados.map((d) => (
-          <div key={d.id} onClick={() => onSelect?.(d)}>
-            <TarjetaDescuento descuento={d} variant="card" />
-          </div>
+          <TarjetaDescuento
+            key={d.id}
+            descuento={d}
+            variant="card"
+            onOpen={() => onSelect?.(d)}
+          />
         ))}
 
         {filtrados.length === 0 ? (
@@ -129,6 +138,7 @@ export default function ListaDescuentos({ descuentos, onSelect }: Props) {
             <h3>No encontramos nada</h3>
             <p>Prueba con otros tÃ©rminos o cambia de categorÃ­a.</p>
             <button
+              type="button"
               className="btn-pill btn-primary"
               onClick={() => {
                 setBusqueda('');

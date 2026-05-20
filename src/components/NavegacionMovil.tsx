@@ -36,10 +36,12 @@ export default function NavegacionMovil() {
                 className={`dock-item ${isActive ? 'active' : ''}`}
                 aria-current={isActive ? 'page' : undefined}
                 aria-label={tab.label}
+                title={tab.label}
               >
                 <span className="dock-icon">
                   <Icon size={28} strokeWidth={isActive ? 2.25 : 1.7} />
                 </span>
+                <span className="sr-only">{tab.label}</span>
               </Link>
             );
           })}

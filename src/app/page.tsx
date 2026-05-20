@@ -46,6 +46,9 @@ export default async function HomePage() {
     descuentosTotal,
     eventosConImagen,
     descuentosDestacados,
+    categoriasEvento,
+    categoriasDescuento,
+    source,
   } = await getHomeCatalogo();
 
   const spotlight = eventosConImagen[0];
@@ -133,6 +136,39 @@ export default async function HomePage() {
             </div>
 
             <EventCards eventos={agenda} />
+          </section>
+
+          <section className={`${styles.sectionCard} ${styles.impactCard}`}>
+            <div className={styles.sectionHead}>
+              <div>
+                <span className={styles.sectionKicker}>Impacto medible</span>
+                <h3>Una guia util para jovenes, comercios y municipios</h3>
+              </div>
+            </div>
+
+            <div className={styles.valueGrid}>
+              <article>
+                <strong>Valor publico</strong>
+                <p>Centraliza actividades culturales y descuentos para que cualquier joven pueda encontrar planes cercanos sin conocer cada portal de origen.</p>
+              </article>
+              <article>
+                <strong>Valor economico</strong>
+                <p>Hace visibles comercios colaboradores y oportunidades de ocio, cultura, formacion y transporte con potencial de derivar visitas y consumo local.</p>
+              </article>
+              <article>
+                <strong>Accesibilidad</strong>
+                <p>Navegacion por teclado, enlaces de salto, listas alternativas al mapa, foco visible y respeto a preferencias de movimiento reducido.</p>
+              </article>
+            </div>
+
+            <div className={styles.dataSources} aria-label="Resumen de datos utilizados">
+              <span className={styles.cloudChip}>{eventosTotal} eventos</span>
+              <span className={`${styles.cloudChip} ${styles.alt}`}>{descuentosTotal} descuentos</span>
+              <span className={styles.cloudChip}>Agenda cultural</span>
+              <span className={`${styles.cloudChip} ${styles.alt}`}>Carnet Joven</span>
+              <span className={styles.cloudChip}>{categoriasEvento.length + categoriasDescuento.length} categorias principales</span>
+              <span className={`${styles.cloudChip} ${styles.alt}`}>{source === 'database' ? 'Datos sincronizados' : 'Datos incluidos'}</span>
+            </div>
           </section>
 
           <section className={`${styles.sectionCard} ${styles.warmCard}`}>

@@ -1,5 +1,11 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import styles from './page.module.css';
+
+export const metadata: Metadata = {
+  title: 'Info y accesibilidad | CyL Joven',
+  description: 'Fuentes de datos abiertos, accesibilidad y valor social de CyL Joven.',
+};
 
 export default function InfoPage() {
   return (
@@ -42,6 +48,27 @@ export default function InfoPage() {
             <li>Centros colaboradores y descuentos del Carnet Joven de Castilla y Leon.</li>
             <li>Conjuntos de datos abiertos publicados por la Junta de Castilla y Leon.</li>
           </ul>
+        </article>
+
+        <article className={styles.panel}>
+          <span className={styles.sectionKicker}>Accesibilidad</span>
+          <h2>Uso inclusivo</h2>
+          <ul>
+            <li>Contenido principal accesible mediante enlace de salto.</li>
+            <li>Controles con foco visible, etiquetas y estados seleccionados.</li>
+            <li>Listado alternativo al mapa para lector de pantalla y teclado.</li>
+            <li>Animaciones adaptadas a la preferencia de movimiento reducido.</li>
+          </ul>
+        </article>
+
+        <article className={styles.panel}>
+          <span className={styles.sectionKicker}>Impacto</span>
+          <h2>Valor publico y economico</h2>
+          <p>
+            La aplicacion ayuda a jovenes a decidir que hacer, a familias y
+            ayuntamientos a difundir actividad cultural, y a comercios a ganar
+            visibilidad a partir de datos abiertos reutilizables.
+          </p>
         </article>
 
         <article className={styles.panel}>

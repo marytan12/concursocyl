@@ -190,6 +190,10 @@
   background: var(--surface-warm);
 }
 
+.impactCard {
+  background: var(--surface-highlight);
+}
+
 .compactCard {
   display: flex;
   flex-direction: column;
@@ -296,6 +300,32 @@
   gap: 10px;
 }
 
+.valueGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.valueGrid article {
+  border: 1px solid var(--border-subtle);
+  border-radius: 18px;
+  background: var(--surface-strong);
+  padding: 14px;
+}
+
+.valueGrid strong {
+  display: block;
+  color: var(--brand-strong);
+  margin-bottom: 6px;
+}
+
+.dataSources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
 .cloudChip {
   background: var(--surface-cloud);
   color: var(--brand-accent);
@@ -314,6 +344,10 @@
 
   .discountGrid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .valueGrid {
+    grid-template-columns: 1fr;
   }
 
   .spotlightCard {

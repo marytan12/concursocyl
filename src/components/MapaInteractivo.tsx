@@ -142,14 +142,14 @@ export default function MapaInteractivo({
   }
 
   return (
-    <div className="mapa-wrapper">
+    <div className="mapa-wrapper" aria-label="Mapa con marcadores de eventos">
       <MapContainer
         center={center}
         zoom={zoom}
         scrollWheelZoom
         style={{ width: '100%', height: '100%' }}
         zoomControl={false}
-        attributionControl={false}
+        attributionControl
       >
         <TileLayer
           url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png"
@@ -187,8 +187,8 @@ export default function MapaInteractivo({
                   </div>
                   <h4 className="popup-title">{marker.titulo}</h4>
                   <p className="popup-desc">{marker.descripcion.slice(0, 100)}...</p>
-                  <button className="popup-btn" onClick={() => handleMarkerClick(marker)}>
-                    Ver detalles →
+                  <button type="button" className="popup-btn" onClick={() => handleMarkerClick(marker)}>
+                    Ver detalles
                   </button>
                 </div>
               </Popup>

@@ -170,28 +170,45 @@ export default function MapaPage() {
 
   return (
     <div className="mapa-page">
+      <h1 className="sr-only">Mapa accesible de eventos en Castilla y Leon</h1>
       <div className="map-viewport">
-        <div className="map-inner">
+        <div className="map-inner" role="region" aria-label="Mapa interactivo de eventos">
           <MapaInteractivo markers={markers} onMarkerClick={handleMarkerClick} />
         </div>
 
+        <section className="sr-only sr-only-focusable accessible-results" aria-label="Listado accesible de eventos filtrados">
+          <h2>Eventos visibles</h2>
+          <p>{eventosVisibles.length} resultados con los filtros actuales.</p>
+          <ul>
+            {eventosVisibles.slice(0, 60).map((evento) => (
+              <li key={evento.id}>
+                <button type="button" onClick={() => setSelectedEvento(evento)}>
+                  {evento.titulo}. {evento.localidad}, {evento.provincia}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+
         <div className="floating-chips">
-          <button className="chip-glass quick" onClick={applyToday}>
+          <button type="button" className="chip-glass quick" onClick={applyToday}>
             <span>Hoy</span>
           </button>
-          <button className="chip-glass quick" onClick={applyWeekend}>
+          <button type="button" className="chip-glass quick" onClick={applyWeekend}>
             <span>Este finde</span>
           </button>
-          <button className={`chip-glass quick ${nearMe ? 'active' : ''}`} onClick={toggleNearMe}>
+          <button type="button" className={`chip-glass quick ${nearMe ? 'active' : ''}`} onClick={toggleNearMe} aria-pressed={nearMe}>
             <span>Cerca de mi</span>
           </button>
-          <button className={`chip-glass quick ${onlyFavorites ? 'active' : ''}`} onClick={() => setOnlyFavorites((value) => !value)}>
+          <button type="button" className={`chip-glass quick ${onlyFavorites ? 'active' : ''}`} onClick={() => setOnlyFavorites((value) => !value)} aria-pressed={onlyFavorites}>
             <span>Favoritos</span>
           </button>
           {categoriasVisibles.map((cat) => (
             <button
+              type="button"
               key={cat}
               className={`chip-glass ${filtros.categoria === cat ? 'active' : ''}`}
+              aria-pressed={filtros.categoria === cat}
               onClick={() =>
                 setFiltros((actuales) => ({
                   ...actuales,
@@ -203,7 +220,7 @@ export default function MapaPage() {
               <span>{cat}</span>
             </button>
           ))}
-          <button className="chip-glass more" onClick={() => setFiltrosOpen(true)}>
+          <button type="button" className="chip-glass more" onClick={() => setFiltrosOpen(true)}>
             <span>Mas filtros</span>
           </button>
         </div>
@@ -258,6 +275,30 @@ export default function MapaPage() {
         .map-inner {
           width: 100%;
           height: 100%;
+        }
+
+        .accessible-results h2 {
+          font-size: 1.1rem;
+          margin-bottom: 6px;
+        }
+
+        .accessible-results ul {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+          list-style: none;
+          margin-top: 12px;
+        }
+
+        .accessible-results button {
+          width: 100%;
+          border: 1px solid var(--border-subtle);
+          border-radius: 10px;
+          background: var(--surface-strong);
+          color: var(--text-primary);
+          padding: 10px;
+          text-align: left;
+          cursor: pointer;
         }
 
         .floating-chips {

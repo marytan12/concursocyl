@@ -49,7 +49,7 @@ export default function DescuentosPage() {
         </div>
       </header>
 
-      <main className="page-content">
+      <section className="page-content" aria-live="polite">
         {loading ? (
           <div className="loading-state">
             {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -59,7 +59,7 @@ export default function DescuentosPage() {
         ) : (
           <ListaDescuentos descuentos={descuentos} onSelect={(d) => setSelectedDescuento(d)} />
         )}
-      </main>
+      </section>
 
       {selectedDescuento ? (
         <TarjetaDescuento

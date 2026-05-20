@@ -8,7 +8,12 @@ export default function AppChrome({
 }) {
   return (
     <>
-      <main className={`main-content ${styles.appShell}`}>{children}</main>
+      <a href="#contenido-principal" className={styles.skipLink}>
+        Saltar al contenido principal
+      </a>
+      <main id="contenido-principal" className={`main-content ${styles.appShell}`} tabIndex={-1}>
+        {children}
+      </main>
       <NavegacionMovil />
     </>
   );

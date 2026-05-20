@@ -1,7 +1,7 @@
 'use client';
 
 import { FormEvent } from 'react';
-import { IconMic, IconSearch, IconX } from '@/components/Icons';
+import { IconSearch, IconX } from '@/components/Icons';
 
 interface Props {
   value: string;
@@ -58,7 +58,7 @@ export default function GeonotisSearchBar({
             <span className="spinner" aria-label="Buscando" />
           ) : (
             <button type="submit" className="icon-button submit-button" aria-label="Buscar">
-              <IconMic size={22} strokeWidth={2.5} />
+              <IconSearch size={20} strokeWidth={2.5} />
             </button>
           )}
         </form>

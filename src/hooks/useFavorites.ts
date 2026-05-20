@@ -1,19 +1,21 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+
+function readFavorites(storageKey: string) {
+  if (typeof window === 'undefined') return new Set<string>();
+
+  try {
+    const saved = window.localStorage.getItem(storageKey);
+    return new Set<string>(saved ? JSON.parse(saved) : []);
+  } catch {
+    return new Set<string>();
+  }
+}
 
 export function useFavorites(scope: 'eventos' | 'descuentos') {
   const storageKey = `cyl-favoritos-${scope}`;
-  const [favorites, setFavorites] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    try {
-      const saved = window.localStorage.getItem(storageKey);
-      setFavorites(new Set(saved ? JSON.parse(saved) : []));
-    } catch {
-      setFavorites(new Set());
-    }
-  }, [storageKey]);
+  const [favorites, setFavorites] = useState<Set<string>>(() => readFavorites(storageKey));
 
   const toggleFavorite = (id: string) => {
     setFavorites((current) => {

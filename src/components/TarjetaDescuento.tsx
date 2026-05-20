@@ -37,12 +37,14 @@ interface Props {
     enlace?: string | null;
   };
   onClose?: () => void;
+  onOpen?: () => void;
   variant?: 'card' | 'detail';
 }
 
 export default function TarjetaDescuento({
   descuento,
   onClose,
+  onOpen,
   variant = 'card',
 }: Props) {
   const color = COLORES_CATEGORIA[descuento.categoria] || '#6B7280';
@@ -83,7 +85,7 @@ export default function TarjetaDescuento({
         <div className="drag-handle" />
 
         {onClose ? (
-          <button className="close-btn" onClick={onClose} aria-label="Cerrar">
+          <button type="button" className="close-btn" onClick={onClose} aria-label="Cerrar">
             <IconX size={15} />
           </button>
         ) : null}
@@ -140,13 +142,15 @@ export default function TarjetaDescuento({
 
           <div className="detail-actions">
             <button
+              type="button"
               className={`action-chip ${isFavorite(descuento.id) ? 'active' : ''}`}
               onClick={() => toggleFavorite(descuento.id)}
+              aria-pressed={isFavorite(descuento.id)}
             >
               <IconHeart size={14} fill={isFavorite(descuento.id) ? 'currentColor' : 'none'} />
               Guardar
             </button>
-            <button className="action-chip" onClick={handleShare}>
+            <button type="button" className="action-chip" onClick={handleShare}>
               <IconShare size={14} />
               Compartir
             </button>
@@ -384,16 +388,19 @@ export default function TarjetaDescuento({
         )}
         <div className="card-actions">
           <button
+            type="button"
             className={`mini-action ${isFavorite(descuento.id) ? 'active' : ''}`}
             onClick={(event) => {
               event.stopPropagation();
               toggleFavorite(descuento.id);
             }}
             aria-label="Guardar favorito"
+            aria-pressed={isFavorite(descuento.id)}
           >
             <IconHeart size={13} fill={isFavorite(descuento.id) ? 'currentColor' : 'none'} />
           </button>
           <button
+            type="button"
             className="mini-action"
             onClick={(event) => {
               event.stopPropagation();
@@ -403,6 +410,18 @@ export default function TarjetaDescuento({
           >
             <IconShare size={13} />
           </button>
+          {onOpen ? (
+            <button
+              type="button"
+              className="details-action"
+              onClick={(event) => {
+                event.stopPropagation();
+                onOpen();
+              }}
+            >
+              Detalles
+            </button>
+          ) : null}
         </div>
       </div>
 
@@ -519,6 +538,7 @@ export default function TarjetaDescuento({
           display: flex;
           gap: 6px;
           flex-shrink: 0;
+          align-items: center;
         }
 
         .mini-action {
@@ -538,6 +558,18 @@ export default function TarjetaDescuento({
         .mini-action:hover {
           color: var(--brand-accent-strong);
           border-color: var(--border-active);
+        }
+
+        .details-action {
+          min-height: 32px;
+          border-radius: 999px;
+          border: 1px solid var(--border-subtle);
+          background: var(--text-primary);
+          color: var(--bg-primary);
+          padding: 0 12px;
+          font-size: 12px;
+          font-weight: 800;
+          cursor: pointer;
         }
       `}</style>
     </div>

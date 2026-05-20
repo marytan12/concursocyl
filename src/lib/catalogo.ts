@@ -59,22 +59,24 @@ let descuentosCache: Promise<DescuentoRecord[]> | undefined;
 export async function getEventosCatalogo(params: EventosParams = {}) {
   const limite = Math.min(params.limite ?? 100, 500);
 
-  try {
-    const where = buildEventosWhere(params);
-    const [eventos, total] = await Promise.all([
-      prisma.evento.findMany({
-        where,
-        orderBy: { fechaInicio: 'asc' },
-        take: limite,
-      }),
-      prisma.evento.count({ where }),
-    ]);
+  if (hasDatabaseUrl()) {
+    try {
+      const where = buildEventosWhere(params);
+      const [eventos, total] = await Promise.all([
+        prisma.evento.findMany({
+          where,
+          orderBy: { fechaInicio: 'asc' },
+          take: limite,
+        }),
+        prisma.evento.count({ where }),
+      ]);
 
-    if (total > 0) {
-      return { data: eventos, total, source: 'database' as const };
+      if (total > 0) {
+        return { data: eventos, total, source: 'database' as const };
+      }
+    } catch (error) {
+      console.error('Fallo consultando eventos en base de datos, usando JSON local:', error);
     }
-  } catch (error) {
-    console.error('Fallo consultando eventos en base de datos, usando JSON local:', error);
   }
 
   const eventos = await getBundledEventos();
@@ -85,22 +87,24 @@ export async function getEventosCatalogo(params: EventosParams = {}) {
 export async function getDescuentosCatalogo(params: DescuentosParams = {}) {
   const limite = Math.min(params.limite ?? 100, 500);
 
-  try {
-    const where = buildDescuentosWhere(params);
-    const [descuentos, total] = await Promise.all([
-      prisma.descuento.findMany({
-        where,
-        orderBy: { nombre: 'asc' },
-        take: limite,
-      }),
-      prisma.descuento.count({ where }),
-    ]);
+  if (hasDatabaseUrl()) {
+    try {
+      const where = buildDescuentosWhere(params);
+      const [descuentos, total] = await Promise.all([
+        prisma.descuento.findMany({
+          where,
+          orderBy: { nombre: 'asc' },
+          take: limite,
+        }),
+        prisma.descuento.count({ where }),
+      ]);
 
-    if (total > 0) {
-      return { data: descuentos, total, source: 'database' as const };
+      if (total > 0) {
+        return { data: descuentos, total, source: 'database' as const };
+      }
+    } catch (error) {
+      console.error('Fallo consultando descuentos en base de datos, usando JSON local:', error);
     }
-  } catch (error) {
-    console.error('Fallo consultando descuentos en base de datos, usando JSON local:', error);
   }
 
   const descuentos = await getBundledDescuentos();
@@ -109,74 +113,76 @@ export async function getDescuentosCatalogo(params: DescuentosParams = {}) {
 }
 
 export async function getHomeCatalogo() {
-  try {
-    const [
-      eventosTotal,
-      descuentosTotal,
-      eventosConImagen,
-      descuentosDestacados,
-      categoriasEvento,
-      categoriasDescuento,
-    ] = await Promise.all([
-      prisma.evento.count(),
-      prisma.descuento.count(),
-      prisma.evento.findMany({
-        where: { imagen: { not: null } },
-        orderBy: { fechaInicio: 'asc' },
-        take: 4,
-        select: {
-          id: true,
-          titulo: true,
-          categoria: true,
-          fechaInicio: true,
-          fechaFin: true,
-          localidad: true,
-          provincia: true,
-          imagen: true,
-          descripcion: true,
-          enlace: true,
-        },
-      }),
-      prisma.descuento.findMany({
-        orderBy: [{ porcentaje: 'desc' }, { nombre: 'asc' }],
-        take: 6,
-        select: {
-          id: true,
-          nombre: true,
-          categoria: true,
-          localidad: true,
-          provincia: true,
-          porcentaje: true,
-          enlace: true,
-        },
-      }),
-      prisma.evento.groupBy({
-        by: ['categoria'],
-        _count: { categoria: true },
-        orderBy: { _count: { categoria: 'desc' } },
-        take: 5,
-      }),
-      prisma.descuento.groupBy({
-        by: ['categoria'],
-        _count: { categoria: true },
-        orderBy: { _count: { categoria: 'desc' } },
-        take: 5,
-      }),
-    ]);
-
-    if (eventosTotal > 0 || descuentosTotal > 0) {
-      return {
+  if (hasDatabaseUrl()) {
+    try {
+      const [
         eventosTotal,
         descuentosTotal,
         eventosConImagen,
         descuentosDestacados,
         categoriasEvento,
         categoriasDescuento,
-        source: 'database' as const,
-      };
+      ] = await Promise.all([
+        prisma.evento.count(),
+        prisma.descuento.count(),
+        prisma.evento.findMany({
+          where: { imagen: { not: null } },
+          orderBy: { fechaInicio: 'asc' },
+          take: 4,
+          select: {
+            id: true,
+            titulo: true,
+            categoria: true,
+            fechaInicio: true,
+            fechaFin: true,
+            localidad: true,
+            provincia: true,
+            imagen: true,
+            descripcion: true,
+            enlace: true,
+          },
+        }),
+        prisma.descuento.findMany({
+          orderBy: [{ porcentaje: 'desc' }, { nombre: 'asc' }],
+          take: 6,
+          select: {
+            id: true,
+            nombre: true,
+            categoria: true,
+            localidad: true,
+            provincia: true,
+            porcentaje: true,
+            enlace: true,
+          },
+        }),
+        prisma.evento.groupBy({
+          by: ['categoria'],
+          _count: { categoria: true },
+          orderBy: { _count: { categoria: 'desc' } },
+          take: 5,
+        }),
+        prisma.descuento.groupBy({
+          by: ['categoria'],
+          _count: { categoria: true },
+          orderBy: { _count: { categoria: 'desc' } },
+          take: 5,
+        }),
+      ]);
+
+      if (eventosTotal > 0 || descuentosTotal > 0) {
+        return {
+          eventosTotal,
+          descuentosTotal,
+          eventosConImagen,
+          descuentosDestacados,
+          categoriasEvento,
+          categoriasDescuento,
+          source: 'database' as const,
+        };
+      }
+    } catch (error) {
+      console.error('Fallo cargando portada desde base de datos, usando JSON local:', error);
     }
-  } catch (error) {
-    console.error('Fallo cargando portada desde base de datos, usando JSON local:', error);
   }
 
   const [eventos, descuentos] = await Promise.all([getBundledEventos(), getBundledDescuentos()]);
@@ -387,9 +393,18 @@ function buildCategorySummary(categorias: string[]) {
 }
 
 async function readBundledJson(fileName: string) {
-  const filePath = path.join(process.cwd(), fileName);
+  const filePath = path.join(/* turbopackIgnore: true */ process.cwd(), fileName);
   const contents = await readFile(filePath, 'utf-8');
   return JSON.parse(contents) as Record<string, unknown>[];
+}
+
+function hasDatabaseUrl() {
+  const databaseUrl = process.env.DATABASE_URL;
+  return Boolean(
+    databaseUrl &&
+      !databaseUrl.includes('USER:PASSWORD@HOST') &&
+      !databaseUrl.includes('postgresql://USER:PASSWORD')
+  );
 }
 
 function getFields(record: Record<string, unknown>) {

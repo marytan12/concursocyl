@@ -30,6 +30,7 @@ export default function ToggleTema() {
       onClick={toggleTheme}
       className="toggle-tema"
       aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+      aria-pressed={theme === 'dark'}
       title={theme === 'dark' ? 'Modo claro' : 'Modo oscuro'}
     >
       <AnimatePresence mode="wait">

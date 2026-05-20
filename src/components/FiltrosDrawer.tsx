@@ -1,6 +1,4 @@
 'use client';
-
-import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   CATEGORIAS_DESCUENTO,
@@ -39,18 +37,14 @@ export default function FiltrosDrawer({
   onClose,
 }: Props) {
   const categorias = tipo === 'eventos' ? CATEGORIAS_EVENTO : CATEGORIAS_DESCUENTO;
-  const [localFiltros, setLocalFiltros] = useState(filtros);
 
   const updateFiltro = (key: string, value: string | undefined) => {
-    const updated = { ...localFiltros, [key]: value || undefined };
-    setLocalFiltros(updated);
+    const updated = { ...filtros, [key]: value || undefined };
     onFiltrosChange(updated);
   };
 
   const limpiarFiltros = () => {
-    const empty = {};
-    setLocalFiltros(empty);
-    onFiltrosChange(empty);
+    onFiltrosChange({});
   };
 
   return (
@@ -72,6 +66,7 @@ export default function FiltrosDrawer({
             exit={{ x: '100%' }}
             transition={{ type: 'spring', damping: 25, stiffness: 300 }}
             role="dialog"
+            aria-modal="true"
             aria-label="Filtros"
           >
             <div className="drawer-header">
@@ -79,21 +74,22 @@ export default function FiltrosDrawer({
                 <IconFilter size={18} />
                 Filtros
               </h3>
-              <button onClick={onClose} className="close-btn" aria-label="Cerrar filtros">
+              <button type="button" onClick={onClose} className="close-btn" aria-label="Cerrar filtros">
                 <IconX size={15} />
               </button>
             </div>
 
             <div className="filter-section">
-              <label className="filter-label">Buscar</label>
+              <label className="filter-label" htmlFor="filtro-busqueda">Buscar</label>
               <div className="input-shell">
                 <span className="input-icon" aria-hidden="true">
                   <IconSearch size={15} />
                 </span>
                 <input
+                  id="filtro-busqueda"
                   type="text"
                   placeholder="Buscar por nombre..."
-                  value={localFiltros.busqueda || ''}
+                  value={filtros.busqueda || ''}
                   onChange={(e) => updateFiltro('busqueda', e.target.value)}
                   className="filter-input"
                 />
@@ -105,13 +101,15 @@ export default function FiltrosDrawer({
               <div className="filter-chips">
                 {Object.entries(categorias).map(([key, label]) => (
                   <button
+                    type="button"
                     key={key}
-                    className={`filter-chip ${localFiltros.categoria === key ? 'active' : ''}`}
+                    className={`filter-chip ${filtros.categoria === key ? 'active' : ''}`}
+                    aria-pressed={filtros.categoria === key}
                     onClick={() =>
-                      updateFiltro('categoria', localFiltros.categoria === key ? undefined : key)
+                      updateFiltro('categoria', filtros.categoria === key ? undefined : key)
                     }
                     style={
-                      localFiltros.categoria === key
+                      filtros.categoria === key
                         ? {
                             background: `${COLORES_CATEGORIA[key]}20`,
                             borderColor: COLORES_CATEGORIA[key],
@@ -128,9 +126,10 @@ export default function FiltrosDrawer({
             </div>
 
             <div className="filter-section">
-              <label className="filter-label">Provincia</label>
+              <label className="filter-label" htmlFor="filtro-provincia">Provincia</label>
               <select
-                value={localFiltros.provincia || ''}
+                id="filtro-provincia"
+                value={filtros.provincia || ''}
                 onChange={(e) => updateFiltro('provincia', e.target.value)}
                 className="filter-select"
               >
@@ -145,15 +144,16 @@ export default function FiltrosDrawer({
 
             {tipo === 'eventos' ? (
               <div className="filter-section">
-                <label className="filter-label">Fechas</label>
+                <span className="filter-label">Fechas</span>
                 <div className="date-range">
                   <div className="input-shell">
                     <span className="input-icon" aria-hidden="true">
                       <IconCalendar size={15} />
                     </span>
                     <input
+                      aria-label="Fecha desde"
                       type="date"
-                      value={localFiltros.desde || ''}
+                      value={filtros.desde || ''}
                       onChange={(e) => updateFiltro('desde', e.target.value)}
                       className="filter-input"
                     />
@@ -163,8 +163,9 @@ export default function FiltrosDrawer({
                       <IconCalendar size={15} />
                     </span>
                     <input
+                      aria-label="Fecha hasta"
                       type="date"
-                      value={localFiltros.hasta || ''}
+                      value={filtros.hasta || ''}
                       onChange={(e) => updateFiltro('hasta', e.target.value)}
                       className="filter-input"
                     />
@@ -173,7 +174,7 @@ export default function FiltrosDrawer({
               </div>
             ) : null}
 
-            <button className="btn-pill btn-secondary clear-btn" onClick={limpiarFiltros}>
+            <button type="button" className="btn-pill btn-secondary clear-btn" onClick={limpiarFiltros}>
               <IconSparkles size={14} />
               Limpiar filtros
             </button>

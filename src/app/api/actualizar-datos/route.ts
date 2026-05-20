@@ -17,6 +17,14 @@ export const dynamic = 'force-dynamic';
 
 const LOCAL_EVENTOS_FILE = 'eventos-de-la-agenda-cultural-categorizados-y-geolocalizados.json';
 const LOCAL_DESCUENTOS_FILE = 'colaboradores-carnet-joven.json';
+const LOCAL_EVENTOS_PATH = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  'eventos-de-la-agenda-cultural-categorizados-y-geolocalizados.json'
+);
+const LOCAL_DESCUENTOS_PATH = path.join(
+  /* turbopackIgnore: true */ process.cwd(),
+  'colaboradores-carnet-joven.json'
+);
 
 async function getPrismaClient() {
   const { prisma } = await import('@/lib/prisma');
@@ -276,7 +284,7 @@ function getRecordPayload(record: Record<string, unknown>) {
 }
 
 async function readBundledJson(fileName: string) {
-  const filePath = path.join(process.cwd(), fileName);
+  const filePath = fileName === LOCAL_EVENTOS_FILE ? LOCAL_EVENTOS_PATH : LOCAL_DESCUENTOS_PATH;
   const contents = await readFile(filePath, 'utf-8');
   return JSON.parse(contents) as unknown;
 }

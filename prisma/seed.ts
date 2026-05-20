@@ -84,7 +84,7 @@ async function main() {
         },
       });
       eventCount++;
-    } catch (e) {
+    } catch {
       // Skip duplicates / errors silently
     }
   }
@@ -138,7 +138,7 @@ async function main() {
         },
       });
       descCount++;
-    } catch (e) {
+    } catch {
       // Skip duplicates / errors silently
     }
   }
